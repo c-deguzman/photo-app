@@ -55,7 +55,7 @@ export default class Login extends React.Component {
           <div className="container-fluid">
             <div className="navbar-header">
               <h4 className="navbar-text">
-                 Voting App Gamma
+                 Book App Epsilon
               </h4>
             </div>
 
