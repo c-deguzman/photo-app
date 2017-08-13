@@ -19,10 +19,6 @@ export default class Base extends React.Component {
                 <a className="navbar-brand" href="/">Book App Epsilon</a>
             </div>
 
-            <ul className="nav navbar-nav">
-              <li><a href="/home">Home</a></li>
-            </ul>
-
             <p className="navbar-text">Not signed in</p>
             
             <ul className="nav navbar-nav navbar-right">
