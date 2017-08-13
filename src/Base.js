@@ -16,10 +16,12 @@ export default class Base extends React.Component {
         <nav className="navbar navbar-default">
           <div className="container-fluid">
             <div className="navbar-header">
-              <div className="navbar-header">
-                <a className="navbar-brand" href="#">Book App Epsilon</a>
+                <a className="navbar-brand" href="/">Book App Epsilon</a>
             </div>
-            </div>
+
+            <ul className="nav navbar-nav">
+              <li><a href="/home">Home</a></li>
+            </ul>
 
             <p className="navbar-text">Not signed in</p>
             
@@ -39,11 +41,13 @@ export default class Base extends React.Component {
               <h1 id="title"> Book App Epsilon </h1>
             </div>
             
-            <div id="claims">
-              <h3 className="claim centre"> The books you want. </h3>
-              <h3 className="claim centre"> The prices you set. </h3>
-              <h3 className="claim centre"> The most for you. </h3>
-              <h2 className="claim centre"> Free. </h2>
+            <div id="claims" className="centre">
+              <div id="claims_overlay">
+              <h3 className="claim"> The books you want. </h3>
+              <h3 className="claim"> The prices you set. </h3>
+              <h3 className="claim"> The most for you. </h3>
+              <h2 className="claim"> Free. </h2>
+              </div>
             </div>
             
             <div id="instructions" className="centre">
