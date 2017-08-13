@@ -11,7 +11,8 @@ module.exports = {
     home: './src/home_index',
     createPoll: './src/createPoll_index',
     chartDisplay: './src/chartDisplay_index',
-    myPolls: './src/myPolls_index'
+    myPolls: './src/myPolls_index',
+    base: './src/base_index'
   },
   output: {
     path: path.join(__dirname, 'dist'),

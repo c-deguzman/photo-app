@@ -55,14 +55,10 @@ export default class Register extends React.Component {
         <nav className="navbar navbar-default">
           <div className="container-fluid">
             <div className="navbar-header">
-              <h4 className="navbar-text">
-                 Book App Epsilon
-              </h4>
+              <div className="navbar-header">
+                <a className="navbar-brand" href="/">Book App Epsilon</a>
             </div>
-
-            <ul className="nav navbar-nav">
-              <li><a href="/home">Home</a></li>
-            </ul>
+            </div>
 
             <p className="navbar-text">Not signed in</p>
             

@@ -6,7 +6,16 @@ module.exports = function(app){
 		var ReactDOM = require('react-dom/server');
 
 		app.get('/', function (request, response){
-		    response.redirect('/home/');
+		  var Base_App = require(process.env.ROOT + "/src/Base.js").default;
+		  var Base_html = require(process.env.ROOT + "/src/base_template").default;
+		  
+		  var Comp_Fact = React.createFactory(Base_App);
+		  const Base_string = ReactDOM.renderToString(Comp_Fact());
+		  
+		  response.send(Base_html({
+		    body: Base_string,
+		    title: "Book Trading App"
+		  }));
 		});
 
 
@@ -27,7 +36,7 @@ module.exports = function(app){
 		  
 		  response.send(Login_html({
 		    body: Login_string,
-		    title: "Voting App"
+		    title: "Book Trading App"
 		  }));
 		});
 
@@ -40,7 +49,7 @@ module.exports = function(app){
 		  
 		  response.send(Register_html({
 		    body: Register_string,
-		    title: "Voter Registration"
+		    title: "User Registration"
 		  }));
 		});
 

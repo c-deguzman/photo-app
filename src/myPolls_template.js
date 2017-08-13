@@ -6,7 +6,7 @@ export default ({ body, title}) => {
       <head>
         <title>${title}</title>
         <meta name="description" content="Web-based voting application.">
-        <link id="favicon" rel="icon" href="https://cdn.glitch.com/f0a70106-eee3-44ca-abf0-7ae97fb8b0a6%2Ffavicon.ico?1500669329975" type="image/x-icon">
+        <link id="favicon" rel="icon" href="https://cdn.glitch.com/f0a70106-eee3-44ca-abf0-7ae97fb8b0a6%2FBooks.ico?1502580688625" type="image/x-icon">
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">

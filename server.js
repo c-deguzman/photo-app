@@ -67,14 +67,16 @@ app.enable('trust proxy');
 
 app.use(function(request, response, next){
 
-  if ((request.isAuthenticated() && request.path == "/login") ||
-      (request.isAuthenticated() && request.path == "/login/") || 
-      (request.isAuthenticated() && request.path == "/register") ||  
-      (request.isAuthenticated() && request.path == "/register/")) {
-      response.redirect('/home');
-    } else {
-      return next();
-    }
+  var unauth_paths = ["/login", "/login/", "/register", "/register/", "/"];
+
+  if ((!request.isAuthenticated() && unauth_paths.indexOf(request.path) != -1) ||
+        request.isAuthenticated() && unauth_paths.indexOf(request.path) == -1){
+    return next();
+  } else if  (!request.isAuthenticated() && unauth_paths.indexOf(request.path) == -1){
+    response.redirect("/");
+  } else if (request.isAuthenticated() && unauth_paths.indexOf(request.path) != -1){
+    response.redirect("/home");
+  }
   
 });
 

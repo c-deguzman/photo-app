@@ -107,9 +107,9 @@ export default class MyPolls extends React.Component {
           <nav className="navbar navbar-default">
           <div className="container-fluid">
             <div className="navbar-header">
-              <h4 className="navbar-text">
-                 Book App Epsilon
-              </h4>
+              <div className="navbar-header">
+                <a className="navbar-brand" href="/">Book App Epsilon</a>
+            </div>
             </div>
 
             <ul className="nav navbar-nav">
@@ -134,9 +134,9 @@ export default class MyPolls extends React.Component {
         <nav className="navbar navbar-default">
           <div className="container-fluid">
             <div className="navbar-header">
-              <h4 className="navbar-text">
-                 Book App Epsilon
-              </h4>
+              <div className="navbar-header">
+                <a className="navbar-brand" href="/">Book App Epsilon</a>
+            </div>
             </div>
 
             <ul className="nav navbar-nav">

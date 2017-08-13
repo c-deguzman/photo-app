@@ -64,9 +64,9 @@ export default class HomePage extends React.Component {
         <nav className="navbar navbar-default">
           <div className="container-fluid">
             <div className="navbar-header">
-              <h4 className="navbar-text">
-                 Book App Epsilon
-              </h4>
+              <div className="navbar-header">
+                <a className="navbar-brand" href="/">Book App Epsilon</a>
+            </div>
             </div>
 
             <ul className="nav navbar-nav">
@@ -102,7 +102,7 @@ export default class HomePage extends React.Component {
         </nav>
 
         
-        <h3> Latest Polls </h3> 
+        <h3> All Books </h3> 
         <div className="centre">
           <ul className="list-group" id="results">
           {
