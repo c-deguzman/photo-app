@@ -17,7 +17,9 @@ module.exports = function(app){
     
     var document = {user: username,
                     pass: password,
-                    ip: IP};
+                    ip: IP,
+                    books: []
+                  };
 
     MongoClient.connect(process.env.MONGO_CONNECT, function (err, db){
       if (err){

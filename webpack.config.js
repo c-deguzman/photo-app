@@ -9,9 +9,7 @@ module.exports = {
     login: './src/login_index',
     register: './src/register_index',
     home: './src/home_index',
-    createPoll: './src/createPoll_index',
-    chartDisplay: './src/chartDisplay_index',
-    myPolls: './src/myPolls_index',
+    addBook: './src/addBook_index',
     base: './src/base_index'
   },
   output: {

@@ -8,9 +8,10 @@ export default class HomePage extends React.Component {
     this.render = this.render.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
     this.handleRedirect = this.handleRedirect.bind(this);
+    this.handleSumbit = this.handleSubmit.bind(this);
     
     this.state = {
-      poll: [],
+      books: [],
       user: " ",
       auth: false
     }
@@ -18,41 +19,35 @@ export default class HomePage extends React.Component {
   
   
   componentDidMount() {
-    var request_poll = $.ajax({
+    
+    $.ajax({
       type: "POST",
-      url: "/get_polls",
+      url: "/get_user",
       contentType: 'application/json'
+    }).done((data_user) => {
+      
+      var auth_state;
+      
+      if (data_user === false){
+        auth_state = false;
+      } else {
+        auth_state = true;
+      }
+      
+      this.setState({
+        user: data_user,
+        auth: auth_state
+      });
     });
     
-    request_poll.done((data_poll) => {
-      
-      var request_user = $.ajax({
-        type: "POST",
-        url: "/get_user",
-        contentType: 'application/json'
-      });
-      
-      request_user.done((data_user) => {
-        
-        var auth_state;
-        
-        if (data_user === false){
-          auth_state = false;
-        } else {
-          auth_state = true;
-        }
-        
-        this.setState({
-          poll: data_poll,
-          user: data_user,
-          auth: auth_state
-        });
-      });
-    });
   }
   
   handleRedirect(event, target){
     window.location.assign("/poll?id=" + target);
+  }
+
+  handleSubmit(event){
+    event.preventDefault();
   }
   
   
@@ -71,49 +66,47 @@ export default class HomePage extends React.Component {
 
             <ul className="nav navbar-nav">
               <li className="active"><a href="#">Home</a></li>
-            </ul>
-
-            {
-              this.state.auth ?
-              <ul className="nav navbar-nav">
-                <li><a href="/create_poll">Create Poll</a></li>
-                <li><a href="/my_polls">My Polls</a></li>
-              </ul> :
-              null
-            }
-
-            {
-              this.state.auth ? 
-              <p className="navbar-text"> Signed in as {this.state.user} </p> :
-              <p className="navbar-text">Not signed in</p>
-            }
-
-            {
-              this.state.auth === false ?
-              <ul className="nav navbar-nav navbar-right">
-                <li><a href="/register"><span className="glyphicon glyphicon-user"></span> Sign Up</a></li>
-                <li><a href="/login"><span className="glyphicon glyphicon-log-in"></span> Login</a></li>
-              </ul> :
-              <ul className="nav navbar-nav navbar-right">
-                <li><a href="/logout"><span className="glyphicon glyphicon-log-out"></span> Logout </a></li>
-              </ul> 
-            }
+              <li><a href="/add_book">Add Book</a></li>
+              <li><a href="/my_books">My Books</a></li>
+            </ul> 
+            
+             
+            <p className="navbar-text"> Signed in as {this.state.user} </p> 
+           
+            <ul className="nav navbar-nav navbar-right">
+              <li><a href="/user_settings"><span className="glyphicon glyphicon-cog" /> Settings </a></li>
+              <li><a href="/logout"><span className="glyphicon glyphicon-log-out" /> Logout </a></li>
+            </ul> 
+            
           </div>
         </nav>
 
+        <div className="page-header">
+            <h2> All Books </h2> 
+            <form className="form-horizontal" onSubmit={this.handleSubmit}>
+              <div className="form-group">
+                <label className="control-label col-md-1 col-md-offset-1" htmlFor="book_search">Search :</label>
+                <div className="col-md-6">
+                  <input type="text" className="form-control" id="book_search" name="book_search" placeholder="Enter search term here" onChange={this.changeQuery}  required/>
+                </div>
+                <div className="col-md-2">
+                  <button className="btn btn-default" type="submit"> Submit </button>
+                </div>
+                <div className="col-md-2 col-md-offset-4">
+                  <label className="radio-inline"><input type="radio" name="optradio" defaultChecked />ISBN</label>
+                  <label className="radio-inline"><input type="radio" name="optradio" />Title</label>
+                </div>
+              </div>
+            </form>
+        </div>
         
-        <h3> All Books </h3> 
-        <div className="centre">
-          <ul className="list-group" id="results">
+        
+        <div className="container">
           {
-            this.state.poll.map((item,i) => 
+            this.state.books.map((item,i) => 
                 <li key={i} className="list-group-item" onClick={(e) => this.handleRedirect(e, this.state.poll[i]._id)}> 
-                  <span className="badge">{this.state.poll[i].total_votes}</span>
-                  <p><b>{this.state.poll[i].title}</b> Posted by {this.state.poll[i].poster}</p> 
-
                 </li>)  
           }
-          </ul>
         </div>
         
       </div>

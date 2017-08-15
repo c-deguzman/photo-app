@@ -1,7 +1,7 @@
 module.exports = {
   
+  /*
   get_polls (app){
-
     app.post('/get_polls', function(request, response) {
       
       var MongoClient = require('mongodb').MongoClient;
@@ -75,6 +75,8 @@ module.exports = {
       });
     });
   },
+
+  */
   
   get_auth (app){
     app.post('/get_auth', function(request, response) {
@@ -90,8 +92,10 @@ module.exports = {
       
       response.send(request.user);
     });
-  },
+  }
   
+  /*
+  ,
   get_poll(app){
     app.post('/poll', function(request, response){
       
@@ -377,5 +381,6 @@ module.exports = {
       });
     });
   }
+  */
   
 }
