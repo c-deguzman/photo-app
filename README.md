@@ -8,4 +8,4 @@ Book App Epsilon is a web-based voting application. Built with:
   - React
   - Node
  
-Application allows users to search and upload books they wish to trade.
+Application allows users to search and upload books they wish to trade. Big thanks to the publicly available OpenLibrary API for their ISBN services.
