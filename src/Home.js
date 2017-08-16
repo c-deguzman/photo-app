@@ -8,12 +8,14 @@ export default class HomePage extends React.Component {
     this.render = this.render.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
     this.handleRedirect = this.handleRedirect.bind(this);
-    this.handleSumbit = this.handleSubmit.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
     
     this.state = {
+      all_books: [],
       books: [],
       user: " ",
-      auth: false
+      no_img: "https://pbs.twimg.com/profile_images/600060188872155136/st4Sp6Aw.jpg",
+      mode: "All Books"
     }
   }
   
@@ -25,29 +27,62 @@ export default class HomePage extends React.Component {
       url: "/get_user",
       contentType: 'application/json'
     }).done((data_user) => {
-      
-      var auth_state;
-      
-      if (data_user === false){
-        auth_state = false;
-      } else {
-        auth_state = true;
-      }
-      
       this.setState({
-        user: data_user,
-        auth: auth_state
-      });
+        user: data_user
+      }, () => 
+        $.ajax({
+          type: "POST",
+          url: "/get_books",
+          contentType: 'application/json'
+        }).done((data) => {
+          this.setState({
+            all_books: data.books,
+            books: data.books
+          });
+        })
+      );
     });
     
   }
   
   handleRedirect(event, target){
-    window.location.assign("/poll?id=" + target);
+    window.location.assign("/book?id=" + target);
   }
 
   handleSubmit(event){
     event.preventDefault();
+
+    var mode = event.target.search_by.value;
+    var lookup = event.target.book_search.value;
+
+    var book_results = [];
+
+    if (mode == "isbn"){
+      book_results = this.state.all_books.filter((item) => (item.isbn == lookup));
+    } else if (mode == "title"){
+      book_results = this.state.all_books.filter((item) => (item.title.toLowerCase().indexOf(lookup.toLowerCase()) != -1));
+    }
+
+    this.setState({
+      books: book_results,
+      mode: "Search Results"
+    });
+  
+  }
+
+  isbn_to_cover(isbn){
+    return ("https://covers.openlibrary.org/b/isbn/"+ isbn + "-M.jpg?default=false");
+  }
+
+  formatTitle(title){
+
+    var limit = 20;
+
+    if (title.length < limit){
+      return title;
+    }
+
+    return (title.slice(0, limit - 3) + "...");
   }
   
   
@@ -65,11 +100,10 @@ export default class HomePage extends React.Component {
             </div>
 
             <ul className="nav navbar-nav">
-              <li className="active"><a href="#">Home</a></li>
+              <li className="active"><a href="/Home">Home</a></li>
               <li><a href="/add_book">Add Book</a></li>
               <li><a href="/my_books">My Books</a></li>
             </ul> 
-            
              
             <p className="navbar-text"> Signed in as {this.state.user} </p> 
            
@@ -81,11 +115,12 @@ export default class HomePage extends React.Component {
           </div>
         </nav>
 
-        <div className="page-header">
-            <h2> All Books </h2> 
+        <div className="page-header container">
+            <h2 className="centre"> {this.state.mode} </h2> 
+
             <form className="form-horizontal" onSubmit={this.handleSubmit}>
               <div className="form-group">
-                <label className="control-label col-md-1 col-md-offset-1" htmlFor="book_search">Search :</label>
+                <label className="control-label col-md-3" htmlFor="book_search">Search :</label>
                 <div className="col-md-6">
                   <input type="text" className="form-control" id="book_search" name="book_search" placeholder="Enter search term here" onChange={this.changeQuery}  required/>
                 </div>
@@ -93,19 +128,32 @@ export default class HomePage extends React.Component {
                   <button className="btn btn-default" type="submit"> Submit </button>
                 </div>
                 <div className="col-md-2 col-md-offset-4">
-                  <label className="radio-inline"><input type="radio" name="optradio" defaultChecked />ISBN</label>
-                  <label className="radio-inline"><input type="radio" name="optradio" />Title</label>
+                  <label className="radio-inline"><input type="radio" value="title" name="search_by" defaultChecked />Title</label>
+                  <label className="radio-inline"><input type="radio" value="isbn" name="search_by" />ISBN</label>
                 </div>
               </div>
             </form>
+            {
+              this.state.mode == "Search Results" ?
+              <div className="centre">
+                <button onClick={() => this.setState({mode: "All Books", books: this.state.all_books})} className="btn btn-info">All books</button> 
+              </div> :
+              null
+            }
         </div>
         
         
         <div className="container">
           {
+            (this.state.books.length > 0) ?
             this.state.books.map((item,i) => 
-                <li key={i} className="list-group-item" onClick={(e) => this.handleRedirect(e, this.state.poll[i]._id)}> 
-                </li>)  
+                <div key={i} className="col-md-2">
+                  <img className="img-responsive img_result" src={this.state.books[i].cover ? this.isbn_to_cover(this.state.books[i].isbn) : this.state.no_img}
+                       title={this.state.books[i].title}
+                  />
+                  <p>{this.formatTitle(this.state.books[i].title)}</p>
+                </div>)  :
+            <p> Sorry. No results found. </p>
           }
         </div>
         

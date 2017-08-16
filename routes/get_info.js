@@ -92,6 +92,37 @@ module.exports = {
       
       response.send(request.user);
     });
+  },
+
+  get_books(app){
+    app.post('/get_books', function(request, response) {
+      
+      var MongoClient = require('mongodb').MongoClient;
+
+      MongoClient.connect(process.env.MONGO_CONNECT, function (err, db){
+        if (err){
+          throw err;
+          return;
+        }
+
+        db.collection("books", function (err, collection){
+
+          if (err){
+            throw err;
+            return;
+          } 
+
+          collection.find({}, {"sort" : [['time', 'descending']]}).toArray(function (err, documents) {
+
+            if (err){
+              throw err;
+              return;
+            }
+            response.send({books: documents});
+          });   
+        });
+      });
+    });
   }
   
   /*

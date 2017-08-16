@@ -3,17 +3,14 @@ module.exports = function(app){
 
 	app.post('/add_book', function(request, response) {
 
-		var add_doc_user = {
-			cover: request.body.cover,
-		   	title: request.body.title,
-		   	isbn: request.body.isbn
-		};
+		var time = Math.round(new Date().getTime()/1000);
 
-		var add_doc_site = 	{
+		var add_doc = 	{
 			cover: request.body.cover,
 			title: request.body.title,
 			user: request.user,
-			isbn: request.body.isbn
+			isbn: request.body.isbn,
+			time: time
 		};	 
 
 		 MongoClient.connect(process.env.MONGO_CONNECT, function (err, db){
@@ -23,52 +20,27 @@ module.exports = function(app){
             return;
           }
 
-          db.collection("accounts", function (err, collection){
 
-            if (err){
-	            response.send({"result": "error",
-	        			       "error": "Internal connection ERROR. Please report this to site admin."});
-	            return;
-	          }
-
-            collection.findOne({user: request.user}, function (err, doc){
-            	if (err){
+	    	db.collection("books", function (err, coll){
+	    		if (err){
 		            response.send({"result": "error",
-		        			       "error": "Internal connection ERROR. Error retrieving user information."});
-		        	return;
-		        }
+		        			       "error": "Internal connection ERROR. Please report this to site admin."});
+		            return;
+		          }
 
-		        collection.findOneAndUpdate({user: request.user}, {$set : {books: doc.books.concat([add_doc_user])}}, function(err, doc){
+		        coll.insertOne(add_doc, function (err, document){
+	            	if (err){
+			            response.send({"result": "error",
+			        			       "error": "Internal connection ERROR. Error retrieving site book information."});
+			        	return;
+			        }
 
-		        	if (err){
-		            	response.send({"result": "error",
-		        			       "error": "Internal connection ERROR. Error updating user information."});
-		        		return;
-		        	}
-
-		        	db.collection("books", function (err, coll){
-		        		if (err){
-				            response.send({"result": "error",
-				        			       "error": "Internal connection ERROR. Please report this to site admin."});
-				            return;
-				          }
-
-				        coll.insertOne(add_doc_site, function (err, document){
-			            	if (err){
-					            response.send({"result": "error",
-					        			       "error": "Internal connection ERROR. Error retrieving site book information."});
-					        	return;
-					        }
-
-					        response.send({
-					        	"result": "success",
-					        	"error": ""
-					        });
-				      	});
-		        	});
-		        });
-            });
-        });
-      });
+			        response.send({
+			        	"result": "success",
+			        	"error": ""
+			        });
+		      	});
+	    	});
+  		});
 	});
 }

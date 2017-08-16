@@ -13,6 +13,7 @@ module.exports = function(app){
 	
 	get_info.get_auth(app);
 	get_info.get_user(app);
+	get_info.get_books(app);
 
 	/*
 	//get_info.get_polls(app);
