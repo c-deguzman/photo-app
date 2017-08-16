@@ -10,7 +10,8 @@ module.exports = {
     register: './src/register_index',
     home: './src/home_index',
     addBook: './src/addBook_index',
-    base: './src/base_index'
+    base: './src/base_index',
+    settings: './src/settings_index'
   },
   output: {
     path: path.join(__dirname, 'dist'),

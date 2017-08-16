@@ -17,7 +17,10 @@ module.exports = function(app){
     
     var document = {user: username,
                     pass: password,
-                    ip: IP
+                    ip: IP,
+                    name: "",
+                    prov: "",
+                    city: ""
                   };
 
     MongoClient.connect(process.env.MONGO_CONNECT, function (err, db){

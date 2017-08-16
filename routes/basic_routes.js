@@ -78,4 +78,17 @@ module.exports = function(app){
 	    title: "Add Book"
 	  }));
 	});
+
+	app.get('/user_settings', function(request, response) {
+	  var App = require(process.env.ROOT + "/src/Settings.js").default;
+	  var Html = require(process.env.ROOT + "/src/settings_template").default;
+
+	  var Comp_Fact = React.createFactory(App);
+	  const React_string = ReactDOM.renderToString(Comp_Fact());
+	  
+	  response.send(Html({
+	    body: React_string,
+	    title: "Change User Profile"
+	  }));
+	});
 }

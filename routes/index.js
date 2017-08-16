@@ -14,16 +14,8 @@ module.exports = function(app){
 	get_info.get_auth(app);
 	get_info.get_user(app);
 	get_info.get_books(app);
-
-	/*
-	//get_info.get_polls(app);
-	//get_info.get_poll(app);
-	//get_info.vote(app);
-	//get_info.add_option(app);
-	//get_info.get_my_polls(app);
-	//get_info.delete_poll(app);
-	//make_poll(app);
-	*/
+	get_info.get_user_info(app);
+	get_info.update_info(app);
 
 	var basic_routes = require('./basic_routes.js');
 
