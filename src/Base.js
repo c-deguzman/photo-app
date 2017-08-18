@@ -39,9 +39,9 @@ export default class Base extends React.Component {
             
             <div id="claims" className="centre">
               <div id="claims_overlay">
-              <h3 className="claim"> The books you want. </h3>
-              <h3 className="claim"> The prices you set. </h3>
-              <h3 className="claim"> The most for you. </h3>
+              <h3 className="claim"> Books you want. </h3>
+              <h3 className="claim"> Books you have. </h3>
+              <h3 className="claim"> Make trades. </h3>
               <h2 className="claim"> Free. </h2>
               </div>
             </div>

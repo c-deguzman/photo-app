@@ -25,3 +25,17 @@ label {
 #welcome {
   margin-bottom: 40px;
 }
+
+#results {
+  width: 80%;
+  margin-top: 3%;
+}
+
+.img_result {
+  width: 120px;
+  height: 180px;
+}
+
+body {
+  overflow-x: hidden;
+}

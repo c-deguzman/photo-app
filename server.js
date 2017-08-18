@@ -34,7 +34,7 @@ require('./authentication').init(app);
 
 app.use(cookieParser());
 
-//app.use(cors({origin: "https://voting-app-gamma.herokuapp.com/"}));
+//app.use(cors({origin: "https://book-app-epsilon.herokuapp.com/"}));
 
 app.use(session({  
   store: new RedisStore({

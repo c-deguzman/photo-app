@@ -1,7 +1,7 @@
 import React from 'react';
 import $ from 'jquery';
 
-export default class HomePage extends React.Component {
+export default class MyBooks extends React.Component {
   constructor(props){
     super(props);
     
@@ -17,7 +17,7 @@ export default class HomePage extends React.Component {
       books: [],
       user: " ",
       no_img: "https://pbs.twimg.com/profile_images/600060188872155136/st4Sp6Aw.jpg",
-      mode: "All Books"
+      mode: "All My Books"
     }
   }
 
@@ -64,8 +64,8 @@ export default class HomePage extends React.Component {
           contentType: 'application/json'
         }).done((data) => {
           this.setState({
-            all_books: data.books,
-            books: data.books
+            all_books: data.books.filter((item) => (item.user == data_user)),
+            books: data.books.filter((item) => (item.user == data_user))
           }, () => {
             this.get_city();
             this.get_prov();
@@ -86,23 +86,12 @@ export default class HomePage extends React.Component {
     var mode = event.target.search_by.value;
     var lookup = event.target.book_search.value;
 
-    var lim_prov = event.target.prov.checked;
-    var lim_city = event.target.city.checked;
-
     var book_results = [];
 
     if (mode == "isbn"){
       book_results = this.state.all_books.filter((item) => (item.isbn == lookup));
     } else if (mode == "title"){
       book_results = this.state.all_books.filter((item) => (item.title.toLowerCase().indexOf(lookup.toLowerCase()) != -1));
-    }
-
-    if (lim_prov){
-      book_results = book_results.filter((item) => (this.state.prov_users.indexOf(item.user) != -1));
-    }
-
-    if (lim_city){
-      book_results = book_results.filter((item) => (this.state.city_users.indexOf(item.user) != -1));
     }
 
     this.setState({
@@ -126,10 +115,8 @@ export default class HomePage extends React.Component {
 
     return (title.slice(0, limit - 3) + "...");
   }
-
-  directToBook(id){
-    window.location.href = "/book?id=" + id;
-  }
+  
+  
  
   render() {
     return (
@@ -144,9 +131,9 @@ export default class HomePage extends React.Component {
             </div>
 
             <ul className="nav navbar-nav">
-              <li className="active"><a href="/Home">Home</a></li>
+              <li><a href="/Home">Home</a></li>
               <li><a href="/add_book">Add Book</a></li>
-              <li><a href="/my_books">My Books</a></li>
+              <li className="active"><a href="/my_books">My Books</a></li>
             </ul> 
              
             <p className="navbar-text"> Signed in as {this.state.user} </p> 
@@ -175,22 +162,12 @@ export default class HomePage extends React.Component {
                   <label className="radio-inline"><input type="radio" value="title" name="search_by" defaultChecked />Title</label>
                   <label className="radio-inline"><input type="radio" value="isbn" name="search_by" />ISBN</label>
                 </div>
-                <div className="col-md-8 col-md-offset-1">
-                  <div className="col-md-3">
-                    <p className="text-right"> Limit search to my: </p>
-                  </div>
-
-                  <div className="col-md-6">
-                    <label className="checkbox-inline"><input type="checkbox" value="" name="prov" />Province</label>
-                    <label className="checkbox-inline"><input type="checkbox" value="" name="city" />City</label>
-                  </div>
-                </div>
               </div>
             </form>
             {
               this.state.mode == "Search Results" ?
               <div className="centre">
-                <button onClick={() => this.setState({mode: "All Books", books: this.state.all_books})} className="btn btn-info">All books</button> 
+                <button onClick={() => this.setState({mode: "All My Books", books: this.state.all_books})} className="btn btn-info">All books</button> 
               </div> :
               null
             }
@@ -204,7 +181,6 @@ export default class HomePage extends React.Component {
                 <div key={i} className="col-md-2">
                   <img className="img-responsive img_result" src={this.state.books[i].cover ? this.isbn_to_cover(this.state.books[i].isbn) : this.state.no_img}
                        title={this.state.books[i].title}
-                       onClick={() => this.directToBook(this.state.books[i]._id)}
                   />
                   <p>{this.formatTitle(this.state.books[i].title)}</p>
                 </div>)  :

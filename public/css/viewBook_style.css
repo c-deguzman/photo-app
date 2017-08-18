@@ -17,36 +17,36 @@ h1 {
   justify-content: center;
 }
 
+
+label {
+  margin-right: 2%;
+}
+
 #welcome {
   margin-bottom: 40px;
 }
 
-#voting_options {
-  margin-bottom: 50px;
-  margin-top: 30px;
+#results {
+  width: 80%;
+  margin-top: 3%;
 }
 
-label {
-  margin-right: 2%;
-  text-align: right;
+.img_result {
+  width: 260px;
+  height: 380px;
+  border: solid;
+  border-color: black;
+  border-width: 5px;
 }
 
-ul.share-buttons{
-  list-style: none;
-  padding: 0;
+body {
+  overflow-x: hidden;
 }
 
-ul.share-buttons li{
-  display: inline;
+#book_title {
+  font-size: 40px;
 }
 
-ul.share-buttons .sr-only{
-  position: absolute;
-  clip: rect(1px 1px 1px 1px);
-  clip: rect(1px, 1px, 1px, 1px);
-  padding: 0;
-  border: 0;
-  height: 1px;
-  width: 1px;
-  overflow: hidden;
+#req {
+  
 }

@@ -91,4 +91,30 @@ module.exports = function(app){
 	    title: "Change User Profile"
 	  }));
 	});
+
+	app.get('/my_books', function(request, response) {
+	  var App = require(process.env.ROOT + "/src/MyBooks.js").default;
+	  var Html = require(process.env.ROOT + "/src/myBooks_template").default;
+
+	  var Comp_Fact = React.createFactory(App);
+	  const React_string = ReactDOM.renderToString(Comp_Fact());
+	  
+	  response.send(Html({
+	    body: React_string,
+	    title: "My Books"
+	  }));
+	});
+
+	app.get('/book', function(request, response) {
+	  var App = require(process.env.ROOT + "/src/ViewBook.js").default;
+	  var Html = require(process.env.ROOT + "/src/viewBook_template").default;
+
+	  var Comp_Fact = React.createFactory(App);
+	  const React_string = ReactDOM.renderToString(Comp_Fact());
+	  
+	  response.send(Html({
+	    body: React_string,
+	    title: "Book Details"
+	  }));
+	});
 }

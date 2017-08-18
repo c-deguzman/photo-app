@@ -11,7 +11,9 @@ module.exports = {
     home: './src/home_index',
     addBook: './src/addBook_index',
     base: './src/base_index',
-    settings: './src/settings_index'
+    settings: './src/settings_index',
+    myBooks: './src/myBooks_index',
+    viewBook: './src/viewBook_index'
   },
   output: {
     path: path.join(__dirname, 'dist'),

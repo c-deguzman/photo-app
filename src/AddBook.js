@@ -14,6 +14,7 @@ export default class AddBook extends React.Component {
       this.onChange = this.onChange.bind(this);
       this.findBookInfo = this.findBookInfo.bind(this);
       this.changeTitle = this.changeTitle.bind(this);
+      this.googleBooks = this.googleBooks.bind(this);
       
       this.state = {
         user: "",
@@ -108,10 +109,21 @@ export default class AddBook extends React.Component {
 	    	  		cover: true,
 	    	  		visible: true
 	    	  	})
-	    	}
-
-	    	  
+	    	} 
   	    });
+    }
+
+    googleBooks(){
+      var url = "https://www.googleapis.com/books/v1/volumes?q=isbn:" + this.state.isbn;
+
+      var request_isbn = $.ajax({
+        type: "GET",
+        url: url,
+      }).done((book_data) => {
+
+        console.log(book_data);
+
+        });
     }
 
     render() {
@@ -141,6 +153,10 @@ export default class AddBook extends React.Component {
             </ul> 
           </div>
         </nav>
+
+        {/*
+        <button className="btn btn-default" onClick={this.googleBooks} >Google Books </button>
+      */}
 
         <Alert show={this.state.error_show} changeShow={() => this.setState({error_show: false})} result={this.state.result} error={this.state.error} success={"Book added successfully! Check on it under 'My Books.'"} /> :          
           <div className="page-header">
