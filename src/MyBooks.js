@@ -11,13 +11,21 @@ export default class MyBooks extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.get_city = this.get_city.bind(this);
     this.get_prov = this.get_prov.bind(this);
+    this.get_to = this.get_to.bind(this);
+    this.get_from = this.get_from.bind(this);
+    this.count_reqs = this.count_reqs.bind(this);
     
     this.state = {
       all_books: [],
+      my_books: [],
+      my_reqs: [],
       books: [],
       user: " ",
       no_img: "https://pbs.twimg.com/profile_images/600060188872155136/st4Sp6Aw.jpg",
-      mode: "All My Books"
+      mode: "My Books",
+      req_mode: "mine",
+      to_reqs: [],
+      from_reqs: []
     }
   }
 
@@ -46,6 +54,44 @@ export default class MyBooks extends React.Component {
       });
     });
   }
+
+  get_to(){
+    $.ajax({
+      type: "POST",
+      url: "/get_requests",
+      contentType: 'application/json',
+      data: JSON.stringify({mode: "to"})
+    }).done((data) => {
+      this.setState({
+        to_reqs: data
+      });
+    });
+  }
+
+  get_from(){
+    $.ajax({
+      type: "POST",
+      url: "/get_requests",
+      contentType: 'application/json',
+      data: JSON.stringify({mode: "from"})
+    }).done((data) => {
+      this.setState({
+        from_reqs: data
+      });
+    });
+  }
+
+  count_reqs(id){
+    var total = 0;
+
+    for (var i in this.state.to_reqs){
+      if (this.state.to_reqs[i].book_id == id){
+        total += 1;
+      }
+    }
+
+    return total;
+  }
   
   
   componentDidMount() {
@@ -69,6 +115,8 @@ export default class MyBooks extends React.Component {
           }, () => {
             this.get_city();
             this.get_prov();
+            this.get_to();
+            this.get_from();
           });
         })
       );
@@ -107,7 +155,7 @@ export default class MyBooks extends React.Component {
 
   formatTitle(title){
 
-    var limit = 20;
+    var limit = 15;
 
     if (title.length < limit){
       return title;
@@ -116,6 +164,10 @@ export default class MyBooks extends React.Component {
     return (title.slice(0, limit - 3) + "...");
   }
   
+
+  directToBook(id){
+    window.location.href = "/book?id=" + id;
+  }
   
  
   render() {
@@ -131,23 +183,27 @@ export default class MyBooks extends React.Component {
             </div>
 
             <ul className="nav navbar-nav">
-              <li><a href="/Home">Home</a></li>
+              <li><a href="/home">Home</a></li>
               <li><a href="/add_book">Add Book</a></li>
-              <li className="active"><a href="/my_books">My Books</a></li>
+              <li className="active"><a href="/my_books">My Requests</a></li>
             </ul> 
              
             <p className="navbar-text"> Signed in as {this.state.user} </p> 
            
             <ul className="nav navbar-nav navbar-right">
-              <li><a href="/user_settings"><span className="glyphicon glyphicon-cog" /> Settings </a></li>
+              <li><a href="/user_settings"><span className="glyphicon glyphicon-cog" /> Profile </a></li>
               <li><a href="/logout"><span className="glyphicon glyphicon-log-out" /> Logout </a></li>
             </ul> 
-            
           </div>
         </nav>
 
         <div className="page-header container">
-            <h2 className="centre"> {this.state.mode} </h2> 
+          {
+            this.state.req_mode == "mine" ? 
+            <h2 className="centre"> Search Incoming Requests &nbsp;<span className="badge badge-danger">{this.state.to_reqs.length}</span></h2> : 
+            <h2 className="centre"> Search Outgoing Requests  <span className="badge badge-danger">{this.state.from_reqs.length}</span></h2>
+          }
+              
 
             <form className="form-horizontal" onSubmit={this.handleSubmit}>
               <div className="form-group">
@@ -167,13 +223,21 @@ export default class MyBooks extends React.Component {
             {
               this.state.mode == "Search Results" ?
               <div className="centre">
-                <button onClick={() => this.setState({mode: "All My Books", books: this.state.all_books})} className="btn btn-info">All books</button> 
+                <button onClick={() => this.setState({mode: "My Books", books: this.state.all_books})} className="btn btn-info">All books</button> 
               </div> :
               null
             }
+
+            {
+              this.state.req_mode == "mine" ?
+                <button className="btn btn-primary" onClick={() => this.setState({req_mode: "others"})}> View Outgoing Requests</button> :
+                <button className="btn btn-primary" onClick={() => this.setState({req_mode: "mine"})}> View Incoming Requests</button>
+            }
+
         </div>
         
         
+        {this.state.req_mode == "mine" ? 
         <div className="container">
           {
             (this.state.books.length > 0) ?
@@ -181,12 +245,15 @@ export default class MyBooks extends React.Component {
                 <div key={i} className="col-md-2">
                   <img className="img-responsive img_result" src={this.state.books[i].cover ? this.isbn_to_cover(this.state.books[i].isbn) : this.state.no_img}
                        title={this.state.books[i].title}
+                       onClick={() => this.directToBook(this.state.books[i]._id)}
                   />
-                  <p>{this.formatTitle(this.state.books[i].title)}</p>
+                  <p>{this.formatTitle(this.state.books[i].title)} <span className="badge badge-danger">{this.count_reqs(this.state.books[i]._id)}</span></p>
                 </div>)  :
             <p> Sorry. No results found. </p>
           }
-        </div>
+        </div> :
+        null
+      }
         
       </div>
     );

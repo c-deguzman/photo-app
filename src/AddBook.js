@@ -141,14 +141,14 @@ export default class AddBook extends React.Component {
 
             <ul className="nav navbar-nav">
               <li><a href="/home">Home</a></li>
-              <li className="active"><a href="#">Add Book</a></li>
-              <li><a href="/my_books">My Books</a></li>
+              <li className="active"><a href="/add_book">Add Book</a></li>
+              <li><a href="/my_books">My Requests</a></li>
             </ul> 
-            
+             
             <p className="navbar-text"> Signed in as {this.state.user} </p> 
            
             <ul className="nav navbar-nav navbar-right">
-              <li><a href="/user_settings"><span className="glyphicon glyphicon-cog" /> Settings </a></li>
+              <li><a href="/user_settings"><span className="glyphicon glyphicon-cog" /> Profile </a></li>
               <li><a href="/logout"><span className="glyphicon glyphicon-log-out" /> Logout </a></li>
             </ul> 
           </div>
@@ -158,7 +158,7 @@ export default class AddBook extends React.Component {
         <button className="btn btn-default" onClick={this.googleBooks} >Google Books </button>
       */}
 
-        <Alert show={this.state.error_show} changeShow={() => this.setState({error_show: false})} result={this.state.result} error={this.state.error} success={"Book added successfully! Check on it under 'My Books.'"} /> :          
+        <Alert show={this.state.error_show} changeShow={() => this.setState({error_show: false})} result={this.state.result} error={this.state.error} success={"Book added successfully! Check on it and recieve notifications for it in 'My Requests.'"} /> :          
           <div className="page-header">
             <h1 id="title">Add Book</h1>
           </div>

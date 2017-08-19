@@ -1,7 +1,8 @@
 function formatTime(unix){
 	var d = new Date(unix * 1000);
+	var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-	var datestring = d.getDate()  + "-" + (d.getMonth()+1) + "-" + d.getFullYear() + " " + d.getHours() + ":" + d.getMinutes();
+	var datestring = months[d.getMonth()] + " " + d.getDate()  + " " + d.getFullYear() + "@" + d.getHours() + ":" + (d.getMinutes() <= 9 ? "0" : "") + d.getMinutes();
 
 	return datestring;
 }
@@ -14,6 +15,7 @@ module.exports = function(app){
 		var time = Math.round(new Date().getTime()/1000);
 		var book_id = request.body.id;
 		var from = request.user;
+		var msg = request.body.message
 
 
 		var MongoClient = require('mongodb').MongoClient;
@@ -70,11 +72,11 @@ module.exports = function(app){
 			        				if (doc){
 			        					response.send({
 			        						"result": "error",
-			        						"error": "You already have a request in, put in at " + formatTime(doc.time)
+			        						"error": "You have already requested this book! Requested " + formatTime(doc.time)
 			        					});
 			        					return;
 			        				} else {
-			        					coll.insertOne({from: from, to: to, book_id: book_id, time: time}, function (err, doc){
+			        					coll.insertOne({from: from, to: to, book_id: book_id, time: time, message: msg}, function (err, doc){
 			        						if (err){
 			        							throw err;
 			        							return;

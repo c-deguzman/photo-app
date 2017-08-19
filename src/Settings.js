@@ -115,18 +115,17 @@ export default class Settings extends React.Component {
             </div>
 
             <ul className="nav navbar-nav">
-              <li><a href="/Home">Home</a></li>
+              <li><a href="/home">Home</a></li>
               <li><a href="/add_book">Add Book</a></li>
-              <li><a href="/my_books">My Books</a></li>
+              <li><a href="/my_books">My Requests</a></li>
             </ul> 
              
             <p className="navbar-text"> Signed in as {this.state.user} </p> 
            
             <ul className="nav navbar-nav navbar-right">
-              <li className="active"><a href="/user_settings"><span className="glyphicon glyphicon-cog" /> Settings </a></li>
+              <li className="active"><a href="/user_settings"><span className="glyphicon glyphicon-cog" /> Profile </a></li>
               <li><a href="/logout"><span className="glyphicon glyphicon-log-out" /> Logout </a></li>
             </ul> 
-            
           </div>
         </nav>
 

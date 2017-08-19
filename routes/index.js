@@ -20,6 +20,8 @@ module.exports = function(app){
 	get_info.update_info(app);
 	get_info.get_sim_users(app);
 	get_info.get_poster_info(app);
+	get_info.get_requests(app);
+	get_info.get_book_reqs(app);
 
 	var basic_routes = require('./basic_routes.js');
 

@@ -50,3 +50,11 @@ body {
 #req {
   
 }
+
+textarea { 
+  resize: vertical; 
+}
+
+.check, .ex {
+  float: right;
+}

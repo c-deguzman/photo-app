@@ -36,6 +36,17 @@ label {
   height: 180px;
 }
 
+.img_result:hover {
+  border: solid;
+  border-color: black;
+  border-width: 2px;
+}
+
 body {
   overflow-x: hidden;
 }
+
+.badge-danger {
+  background-color: #b94a48;
+}
+

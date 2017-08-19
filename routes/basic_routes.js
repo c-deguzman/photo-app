@@ -101,7 +101,7 @@ module.exports = function(app){
 	  
 	  response.send(Html({
 	    body: React_string,
-	    title: "My Books"
+	    title: "My Requests"
 	  }));
 	});
 

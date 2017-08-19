@@ -47,6 +47,83 @@ module.exports = {
     });
   },
 
+  get_requests(app){
+    app.post('/get_requests', function(request, response) {
+      
+      var MongoClient = require('mongodb').MongoClient;
+
+      MongoClient.connect(process.env.MONGO_CONNECT, function (err, db){
+        if (err){
+          throw err;
+          return;
+        }
+
+        db.collection("trade_reqs", function (err, collection){
+
+          if (err){
+            throw err;
+            return;
+          } 
+
+          var query = {};
+
+          if (request.body.mode == "to"){
+            query = {to: request.user};
+          } else {
+            query = {from: request.user}
+          }
+
+          collection.find(query).toArray(function (err, documents) {
+
+            if (err){
+              throw err;
+              return;
+            }
+
+            response.send(documents);
+          });   
+        });
+      });
+    });
+  },
+
+  get_book_reqs(app){
+    app.post('/get_book_reqs', function(request, response) {
+      
+      var MongoClient = require('mongodb').MongoClient;
+
+      MongoClient.connect(process.env.MONGO_CONNECT, function (err, db){
+        if (err){
+          throw err;
+          return;
+        }
+
+        db.collection("trade_reqs", function (err, collection){
+
+          if (err){
+            throw err;
+            return;
+          } 
+
+          collection.find({book_id: request.body.id}).toArray(function (err, documents) {
+
+            if (err){
+              throw err;
+              return;
+            }
+
+            if (documents.length > 0 && documents[0].to != request.user){
+              response.send([]);
+            } else {
+              response.send(documents);
+            }
+
+          });   
+        });
+      });
+    });
+  },
+
   get_book(app){
     app.post('/get_book', function(request, response) {
       

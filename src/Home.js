@@ -88,6 +88,7 @@ export default class HomePage extends React.Component {
 
     var lim_prov = event.target.prov.checked;
     var lim_city = event.target.city.checked;
+    var lim_mine = event.target["!mine"].checked;
 
     var book_results = [];
 
@@ -103,6 +104,10 @@ export default class HomePage extends React.Component {
 
     if (lim_city){
       book_results = book_results.filter((item) => (this.state.city_users.indexOf(item.user) != -1));
+    }
+
+    if (lim_mine){
+      book_results = book_results.filter((item) => (item.user != this.state.user));
     }
 
     this.setState({
@@ -144,18 +149,17 @@ export default class HomePage extends React.Component {
             </div>
 
             <ul className="nav navbar-nav">
-              <li className="active"><a href="/Home">Home</a></li>
+              <li className="active"><a href="/home">Home</a></li>
               <li><a href="/add_book">Add Book</a></li>
-              <li><a href="/my_books">My Books</a></li>
+              <li><a href="/my_books">My Requests</a></li>
             </ul> 
              
             <p className="navbar-text"> Signed in as {this.state.user} </p> 
            
             <ul className="nav navbar-nav navbar-right">
-              <li><a href="/user_settings"><span className="glyphicon glyphicon-cog" /> Settings </a></li>
+              <li><a href="/user_settings"><span className="glyphicon glyphicon-cog" /> Profile </a></li>
               <li><a href="/logout"><span className="glyphicon glyphicon-log-out" /> Logout </a></li>
             </ul> 
-            
           </div>
         </nav>
 
@@ -177,12 +181,13 @@ export default class HomePage extends React.Component {
                 </div>
                 <div className="col-md-8 col-md-offset-1">
                   <div className="col-md-3">
-                    <p className="text-right"> Limit search to my: </p>
+                    <p className="text-right"> Limit search: </p>
                   </div>
 
                   <div className="col-md-6">
-                    <label className="checkbox-inline"><input type="checkbox" value="" name="prov" />Province</label>
-                    <label className="checkbox-inline"><input type="checkbox" value="" name="city" />City</label>
+                    <label className="checkbox-inline"><input type="checkbox" value="" name="prov" />My Province</label>
+                    <label className="checkbox-inline"><input type="checkbox" value="" name="city" />My City</label>
+                    <label className="checkbox-inline"><input type="checkbox" value="" name="!mine" />Not Mine</label>
                   </div>
                 </div>
               </div>

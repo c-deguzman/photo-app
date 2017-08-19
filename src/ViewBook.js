@@ -1,6 +1,7 @@
 import React from 'react';
 import $ from 'jquery';
 import Alert from './Alert';
+import Confirm from 'react-confirm-bootstrap';
 
 export default class ViewBook extends React.Component {
   constructor(props){
@@ -9,14 +10,34 @@ export default class ViewBook extends React.Component {
     this.render = this.render.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
     this.handleRedirect = this.handleRedirect.bind(this);
+    this.changeMessage = this.changeMessage.bind(this);
 
     this.state = {
       mounted: false,
       user: " ",
       no_img: "https://pbs.twimg.com/profile_images/600060188872155136/st4Sp6Aw.jpg",
       mode: "All Books",
-      error_show: false
+      error_show: false,
+      message: "",
+      my_book: false,
+      reqs: [],
+      curr_hover: ""
     }
+  }
+
+  get_reqs(){
+    var id = (new URL(document.location)).searchParams.get("id");
+
+    $.ajax({
+      type: "POST",
+      url: "/get_book_reqs",
+      contentType: 'application/json',
+      data: JSON.stringify({id: id})
+    }).done((reqs_data) => {     
+      this.setState({
+        reqs: reqs_data
+      });
+    });
   }
   
   componentDidMount() {
@@ -51,7 +72,13 @@ export default class ViewBook extends React.Component {
               data: JSON.stringify({user: data.user})
             }).done((data_poster) => {
               this.setState({
-                poster_info: data_poster
+                poster_info: data_poster,
+                my_book: (data.user == data_user)
+              }, () =>
+              {
+                if (this.state.my_book){
+                  this.get_reqs();
+                }
               });
             })
           );
@@ -90,8 +117,20 @@ export default class ViewBook extends React.Component {
     var month = months[a.getMonth()];
     var date = a.getDate();
 
-    return "" + month + " " + date + ", " + year;
+    var hours = a.getHours();
+    var minutes = a.getMinutes();
 
+    return "" + month + " " + date + ", " + year + " @ " + (hours <= 9 ? "0" : "") +  hours + ":" + (minutes <= 9 ? "0" : "") + minutes;
+
+  }
+
+
+  formatMessage(msg){
+    if (msg != ""){
+      return "\"" + msg +  "\"";
+    }
+
+    return "User did not send a personalized message.";
   }
 
   sendRequest(id){
@@ -99,16 +138,27 @@ export default class ViewBook extends React.Component {
       type: "POST",
       url: "/add_request",
       contentType: 'application/json',
-      data: JSON.stringify({id: id})
+      data: JSON.stringify({id: id, message: this.state.message})
     }).done((data) => {
       this.setState({
         result: data.result,
         error_show: true,
-        error: data.error
+        error: data.error,
+        message: ""
       });
     });
   }
   
+
+  changeMessage(event){
+    this.setState({
+      message: event.target.value
+    })
+  }
+
+  handleSubmit(event){
+    event.preventDefault();
+  }
 
   render() {
     return (
@@ -123,18 +173,17 @@ export default class ViewBook extends React.Component {
             </div>
 
             <ul className="nav navbar-nav">
-              <li><a href="/Home">Home</a></li>
+              <li><a href="/home">Home</a></li>
               <li><a href="/add_book">Add Book</a></li>
-              <li><a href="/my_books">My Books</a></li>
+              <li><a href="/my_books">My Requests</a></li>
             </ul> 
              
             <p className="navbar-text"> Signed in as {this.state.user} </p> 
            
             <ul className="nav navbar-nav navbar-right">
-              <li><a href="/user_settings"><span className="glyphicon glyphicon-cog" /> Settings </a></li>
+              <li><a href="/user_settings"><span className="glyphicon glyphicon-cog" /> Profile </a></li>
               <li><a href="/logout"><span className="glyphicon glyphicon-log-out" /> Logout </a></li>
             </ul> 
-            
           </div>
         </nav>
 
@@ -149,6 +198,7 @@ export default class ViewBook extends React.Component {
         
         {
           this.state.mounted ?
+          
           <div>
             <div className="centre">
               <img className="img_result" src={this.state.book.cover ? this.isbn_to_cover(this.state.book.isbn) : this.state.no_img}
@@ -157,25 +207,59 @@ export default class ViewBook extends React.Component {
             </div>
 
             <div>
-              <h3 className="centre">Posted by {this.state.book.user}&nbsp;{this.state.poster_info}</h3>
+              { this.state.my_book ?
+                <h3 className="centre">You posted this book.</h3> :
+                <h3 className="centre">Posted by {this.state.book.user}&nbsp;{this.state.poster_info}</h3>
+              }
               <h4 className="centre">Added on {this.formatTime(this.state.book.time)}</h4>
               <h4 className="centre">ISBN: {this.state.book.isbn}</h4>
             </div>
 
+            { this.state.my_book == false ?
+
+            <div>
             <Alert show={this.state.error_show} changeShow={() => this.setState({error_show: false})} result={this.state.result} error={this.state.error} success={"Request has been added. The poster has been notified."} /> :          
         
-
             <div className="centre">
-              <button id="req" className="btn btn-info" onClick={() => this.sendRequest(this.state.book_id)}>Request Trade</button>
+              <Confirm
+                    onConfirm={() => this.sendRequest(this.state.book_id)}
+                    body={
+                      <div className="form-group">  
+                        <label className="control-label" htmlFor="msg">Trade Request Message:</label>
+                        <textarea type="text" className="form-control" id="msg" name="msg" placeholder="Enter trade request message. Please include contact information." onChange={this.changeMessage} />   
+                      </div>
+                      }
+                    confirmText="Request"
+                    title="Book Verification"
+                    confirmBSStyle="success">
+                    <button id="req" className="btn btn-info"> Request Trade &nbsp; <span className="glyphicon glyphicon-send"/></button>
+                </Confirm> 
+                </div> 
+            </div> :
+            <div>
+              <h4 className="centre"> Accepting any option will &nbsp; <ins>remove</ins> &nbsp; your book listing. You are responsible for arranging the exchange with the requester. </h4>
+              <div className="container">
+                <ul className="list-group">
+                  {this.state.reqs.map(
+                    (item, i) => 
+                    <li key={"list_" + i} className={"list-group-item"}>
+                        Requested by {this.state.reqs[i].from} - {this.formatTime(this.state.reqs[i].time)} 
+                        <button className="btn btn-success check"><span className="glyphicon glyphicon-ok" /></button>
+                        <button className="btn btn-danger ex"><span className="glyphicon glyphicon-remove" /></button>
+                         <i className="centre">{this.formatMessage(this.state.reqs[i].message)}</i></li>
+                    )}
+                </ul>
+              </div>
             </div>
 
-            </div>:
+              }
+              
+            
+
+            </div> :
+
           null
         }
-
-
-
-        
         
       </div>
     );
