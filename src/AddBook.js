@@ -86,7 +86,7 @@ export default class AddBook extends React.Component {
     }
 
     findBookInfo(){
-    	var url = "http://openlibrary.org/search.json?isbn=" + this.state.isbn;
+    	var url = "https://openlibrary.org/search.json?isbn=" + this.state.isbn;
 
     	var request_isbn = $.ajax({
 	      type: "GET",
