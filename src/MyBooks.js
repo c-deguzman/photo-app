@@ -296,7 +296,7 @@ export default class MyBooks extends React.Component {
         <div className="container">
           <ul className="list-group">
           {
-            (this.state.books.length > 0) ?
+            (this.state.from_reqs.length > 0) ?
             this.state.from_reqs.map((item,i) => 
                 <li key={"my_reqs" + i} className="list-group-item">
                   {this.state.from_reqs[i].title} - {this.state.from_reqs[i].isbn} - {this.formatTime(this.state.from_reqs[i].time)} 
