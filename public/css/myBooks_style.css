@@ -50,3 +50,7 @@ body {
   background-color: #b94a48;
 }
 
+.check, .ex {
+  float: right;
+}
+

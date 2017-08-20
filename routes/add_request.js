@@ -35,20 +35,20 @@ module.exports = function(app){
 		            return;
 		          }
 
-		        collection.findOne({_id: obj_id}, function (err, doc){
+		        collection.findOne({_id: obj_id}, function (err, book){
 	            	if (err){
 			            response.send({"result": "error",
 			        			       "error": "Internal connection ERROR. Please report this to site admin."});
 			            return;
 			          }
 
-			        if (!doc){
+			        if (!book){
 			        	response.send({"result": "error",
 			        					"error": "Could not find book. Book may have just been delisted."
 			        	});
 			        	return;
 			        } else {
-			        	if (doc.user == request.user){
+			        	if (book.user == request.user){
 			        		response.send({
 			        			"result": "error",
 			        			"error": "Cannot request your own book."
@@ -56,7 +56,7 @@ module.exports = function(app){
 			        		return;
 			        	} else {
 
-			        		var to = doc.user;
+			        		var to = book.user;
 
 			        		db.collection("trade_reqs", function(err, coll){
 			        			if (err){
@@ -76,7 +76,7 @@ module.exports = function(app){
 			        					});
 			        					return;
 			        				} else {
-			        					coll.insertOne({from: from, to: to, book_id: book_id, time: time, message: msg}, function (err, doc){
+			        					coll.insertOne({from: from, to: to, book_id: book_id, time: time, message: msg, isbn: book.isbn, title: book.title}, function (err, doc){
 			        						if (err){
 			        							throw err;
 			        							return;

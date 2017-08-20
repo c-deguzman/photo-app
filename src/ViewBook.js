@@ -11,6 +11,8 @@ export default class ViewBook extends React.Component {
     this.componentDidMount = this.componentDidMount.bind(this);
     this.handleRedirect = this.handleRedirect.bind(this);
     this.changeMessage = this.changeMessage.bind(this);
+    this.confirmOption = this.confirmOption.bind(this);
+    this.rejectOption = this.rejectOption.bind(this);
 
     this.state = {
       mounted: false,
@@ -21,7 +23,9 @@ export default class ViewBook extends React.Component {
       message: "",
       my_book: false,
       reqs: [],
-      curr_hover: ""
+      curr_hover: "",
+      valid_book: false,
+      valid_id_called: false
     }
   }
 
@@ -43,6 +47,7 @@ export default class ViewBook extends React.Component {
   componentDidMount() {
 
     var id = (new URL(document.location)).searchParams.get("id");
+
     
     $.ajax({
       type: "POST",
@@ -52,35 +57,54 @@ export default class ViewBook extends React.Component {
       this.setState({
         user: data_user
       }, () => 
+
         $.ajax({
           type: "POST",
-          url: "/get_book",
+          url: "/valid_id",
           contentType: 'application/json',
           data: JSON.stringify({id: id})
         }).done((data) => {
-
           this.setState({
-            book: data,
-            mounted: true,
-            book_id: id
-          }, () => 
+            valid_book: data,
+            valid_id_called: true
+          }, () =>
 
-            $.ajax({
-              type: "POST",
-              url: "/get_poster_info",
-              contentType: 'application/json',
-              data: JSON.stringify({user: data.user})
-            }).done((data_poster) => {
-              this.setState({
-                poster_info: data_poster,
-                my_book: (data.user == data_user)
-              }, () =>
-              {
-                if (this.state.my_book){
-                  this.get_reqs();
-                }
-              });
-            })
+          {
+            if (this.state.valid_book){
+              $.ajax({
+                type: "POST",
+                url: "/get_book",
+                contentType: 'application/json',
+                data: JSON.stringify({id: id})
+              }).done((data) => {
+
+                this.setState({
+                  book: data,
+                  mounted: true,
+                  book_id: id
+                }, () => 
+
+                  $.ajax({
+                    type: "POST",
+                    url: "/get_poster_info",
+                    contentType: 'application/json',
+                    data: JSON.stringify({user: data.user})
+                  }).done((data_poster) => {
+                    this.setState({
+                      poster_info: data_poster,
+                      my_book: (data.user == data_user)
+                    }, () =>
+                    {
+                      if (this.state.my_book){
+                        this.get_reqs();
+                      }
+                    });
+                  })
+                );
+              })
+            }
+          }
+
           );
         })
       );
@@ -160,6 +184,34 @@ export default class ViewBook extends React.Component {
     event.preventDefault();
   }
 
+  confirmOption(){
+    var id = (new URL(document.location)).searchParams.get("id");
+
+    $.ajax({
+      type: "POST",
+      url: "/ac_request",
+      contentType: 'application/json',
+      data: JSON.stringify({id: id})
+    }).done((data) => {
+      if (data.result == "success"){
+        window.location.href = "/my_books"
+      }
+    });
+  }
+
+  rejectOption(id){
+    $.ajax({
+      type: "POST",
+      url: "/reject",
+      contentType: 'application/json',
+      data: JSON.stringify({id: id})
+    }).done((data) => {
+      if (data.result == "success"){
+        this.get_reqs();
+      }
+    });
+  }
+
   render() {
     return (
       <div >
@@ -197,7 +249,7 @@ export default class ViewBook extends React.Component {
         </div>
         
         {
-          this.state.mounted ?
+          (this.state.mounted && this.state.valid_book) ?
           
           <div>
             <div className="centre">
@@ -230,22 +282,52 @@ export default class ViewBook extends React.Component {
                       </div>
                       }
                     confirmText="Request"
-                    title="Book Verification"
+                    title="Request Confirmation"
                     confirmBSStyle="success">
                     <button id="req" className="btn btn-info"> Request Trade &nbsp; <span className="glyphicon glyphicon-send"/></button>
                 </Confirm> 
                 </div> 
             </div> :
             <div>
-              <h4 className="centre"> Accepting any option will &nbsp; <ins>remove</ins> &nbsp; your book listing. You are responsible for arranging the exchange with the requester. </h4>
+              <div className="centre">
+                <Confirm
+                  onConfirm={this.confirmOption}
+                  body={
+                    <ul>
+                      <li><h4>Accepting this option will immediately remove your book listing.</h4></li>
+                      <li><h4>All requests for your book will also be removed.</h4></li>
+                    </ul>
+                    }
+                  confirmText="Delete Book"
+                  title="Delete Confirmation"
+                  confirmBSStyle="danger">
+                  <button className="btn btn-danger">Delete &nbsp; <span className="glyphicon glyphicon-trash"/></button>
+                </Confirm> 
+              </div>
+              <h4 className="centre"> Accepting any option will remove your book listing. You are responsible for arranging the exchange with the requester. </h4>
               <div className="container">
                 <ul className="list-group">
                   {this.state.reqs.map(
                     (item, i) => 
                     <li key={"list_" + i} className={"list-group-item"}>
                         Requested by {this.state.reqs[i].from} - {this.formatTime(this.state.reqs[i].time)} 
-                        <button className="btn btn-success check"><span className="glyphicon glyphicon-ok" /></button>
-                        <button className="btn btn-danger ex"><span className="glyphicon glyphicon-remove" /></button>
+                        <Confirm
+                            onConfirm={this.confirmOption}
+                            body={
+                              <ul>
+                                <li><h4>Accepting this option will immediately remove your book listing.</h4></li>
+                                <li><h4>All requests for your book will also be removed.</h4></li>
+                                <li><h4>You are responsible for arranging the exchange with the requester.</h4></li>
+                                <li><h3>At this point you should have the requester's information saved.</h3></li>
+                              </ul>
+                              }
+                            confirmText="Accept Request"
+                            title="Request Confirmation"
+                            confirmBSStyle="success">
+                            <button className="btn btn-success check"><span className="glyphicon glyphicon-ok" /></button>
+                        </Confirm> 
+
+                        <button className="btn btn-danger ex" onClick={() => this.rejectOption(this.state.reqs[i]._id)}><span className="glyphicon glyphicon-remove" /></button>
                          <i className="centre">{this.formatMessage(this.state.reqs[i].message)}</i></li>
                     )}
                 </ul>
@@ -254,11 +336,11 @@ export default class ViewBook extends React.Component {
 
               }
               
-            
-
             </div> :
 
-          null
+          (this.state.valid_id_called  && this.state.valid_book == false) ?
+            <h1 className="centre">Book ID not found.</h1> :
+            null
         }
         
       </div>

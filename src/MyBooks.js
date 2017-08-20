@@ -1,5 +1,6 @@
 import React from 'react';
 import $ from 'jquery';
+import Confirm from 'react-confirm-bootstrap';
 
 export default class MyBooks extends React.Component {
   constructor(props){
@@ -75,6 +76,9 @@ export default class MyBooks extends React.Component {
       contentType: 'application/json',
       data: JSON.stringify({mode: "from"})
     }).done((data) => {
+
+      data.sort((a, b) => b.time - a.time);
+
       this.setState({
         from_reqs: data
       });
@@ -91,6 +95,22 @@ export default class MyBooks extends React.Component {
     }
 
     return total;
+  }
+
+  formatTime(unix){
+    var a = new Date(unix * 1000);
+
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+    var year = a.getFullYear();
+    var month = months[a.getMonth()];
+    var date = a.getDate();
+
+    var hours = a.getHours();
+    var minutes = a.getMinutes();
+
+    return "" + month + " " + date + ", " + year + " @ " + (hours <= 9 ? "0" : "") +  hours + ":" + (minutes <= 9 ? "0" : "") + minutes;
+
   }
   
   
@@ -163,12 +183,31 @@ export default class MyBooks extends React.Component {
 
     return (title.slice(0, limit - 3) + "...");
   }
-  
+
+  formatMessage(msg){
+    if (msg != ""){
+      return "\"" + msg +  "\"";
+    }
+
+    return "You did not send a personalized message.";
+  }
+
+  removeRequest(id){
+    $.ajax({
+      type: "POST",
+      url: "/rm_request",
+      contentType: 'application/json',
+      data: JSON.stringify({id: id})
+    }).done((data) => {
+      if (data.result == "success"){
+       this.get_from();
+      }
+    });
+  }
 
   directToBook(id){
     window.location.href = "/book?id=" + id;
   }
-  
  
   render() {
     return (
@@ -201,10 +240,10 @@ export default class MyBooks extends React.Component {
           {
             this.state.req_mode == "mine" ? 
             <h2 className="centre"> Search Incoming Requests &nbsp;<span className="badge badge-danger">{this.state.to_reqs.length}</span></h2> : 
-            <h2 className="centre"> Search Outgoing Requests  <span className="badge badge-danger">{this.state.from_reqs.length}</span></h2>
+            <h2 className="centre"> Outgoing Requests  &nbsp;<span className="badge badge-danger">{this.state.from_reqs.length}</span></h2>
           }
               
-
+          { this.state.req_mode == "mine" ?
             <form className="form-horizontal" onSubmit={this.handleSubmit}>
               <div className="form-group">
                 <label className="control-label col-md-3" htmlFor="book_search">Search :</label>
@@ -219,7 +258,9 @@ export default class MyBooks extends React.Component {
                   <label className="radio-inline"><input type="radio" value="isbn" name="search_by" />ISBN</label>
                 </div>
               </div>
-            </form>
+            </form> : 
+            null 
+          }
             {
               this.state.mode == "Search Results" ?
               <div className="centre">
@@ -252,7 +293,20 @@ export default class MyBooks extends React.Component {
             <p> Sorry. No results found. </p>
           }
         </div> :
-        null
+        <div className="container">
+          <ul className="list-group">
+          {
+            (this.state.books.length > 0) ?
+            this.state.from_reqs.map((item,i) => 
+                <li key={"my_reqs" + i} className="list-group-item">
+                  {this.state.from_reqs[i].title} - {this.state.from_reqs[i].isbn} - {this.formatTime(this.state.from_reqs[i].time)} 
+                  <button className="btn btn-danger ex" onClick={() => this.removeRequest(this.state.from_reqs[i]._id)}><span className="glyphicon glyphicon-remove" /></button>
+                         <i className="centre">{this.formatMessage(this.state.from_reqs[i].message)}</i>
+                </li>)  :
+            <p> No outgoing requests! </p>
+          }
+          </ul>
+        </div>
       }
         
       </div>

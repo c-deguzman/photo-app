@@ -124,6 +124,104 @@ module.exports = {
     });
   },
 
+  reject(app){
+    app.post('/reject', function(request, response) {
+      
+      var MongoClient = require('mongodb').MongoClient;
+      var ObjectId = require('mongodb').ObjectId; 
+
+      var obj_id = new ObjectId(request.body.id);
+
+      MongoClient.connect(process.env.MONGO_CONNECT, function (err, db){
+        if (err){
+          throw err;
+          return;
+        }
+
+        db.collection("trade_reqs", function (err, collection){
+
+          if (err){
+            throw err;
+            return;
+          } 
+
+          collection.findOne({_id: obj_id}, function (err, doc) {
+
+            if (err){
+              throw err;
+              return;
+            }
+
+            if (!doc){
+              response.send({
+                "result": "error",
+                "error": "Book request not found."
+              });
+            } else if (doc.to != request.user){
+              response.send({
+                "result": "error",
+                "error": "You do not own this book."
+              });
+              return;
+            } else {
+              collection.remove({_id: obj_id}, function (err, num){
+                if (err){
+                  throw err;
+                  return;
+                }
+
+                response.send({
+                  "result": "success",
+                  "error": ""
+                });
+              });
+            }
+          });   
+        });
+      });
+    });
+  },
+
+   valid_id(app){
+    app.post('/valid_id', function(request, response) {
+      
+      var MongoClient = require('mongodb').MongoClient;
+      var ObjectId = require('mongodb').ObjectId; 
+
+      var obj_id = new ObjectId(request.body.id);
+
+      MongoClient.connect(process.env.MONGO_CONNECT, function (err, db){
+        if (err){
+          throw err;
+          return;
+        }
+
+        db.collection("books", function (err, collection){
+
+          if (err){
+            throw err;
+            return;
+          } 
+
+          collection.findOne({_id: obj_id}, function (err, doc) {
+
+            if (err){
+              throw err;
+              return;
+            }
+
+            if (doc){
+              response.send(true);
+              return;
+            } else {
+              response.send(false);
+            }
+          });   
+        });
+      });
+    });
+  },
+
   get_book(app){
     app.post('/get_book', function(request, response) {
       
