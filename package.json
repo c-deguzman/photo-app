@@ -47,6 +47,7 @@
     "nodemon": "^1.11.0",
     "passport": "0.3.2",
     "passport-local": "1.0.0",
+    "passport-twitter": "^1.0.4",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-google-charts": "^1.5.5",

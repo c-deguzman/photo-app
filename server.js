@@ -34,7 +34,7 @@ require('./authentication').init(app);
 
 app.use(cookieParser());
 
-app.use(cors({origin: "https://book-app-epsilon.herokuapp.com/"}));
+//app.use(cors({origin: "https://photo-app-zeta.herokuapp.com/"}));
 
 app.use(session({  
   store: new RedisStore({
@@ -65,6 +65,8 @@ app.use(bodyParser.urlencoded({
 
 app.enable('trust proxy');
 
+/*
+
 app.use(function(request, response, next){
 
   var unauth_paths = ["/login", "/login/", "/register", "/register/", "/"];
@@ -79,6 +81,8 @@ app.use(function(request, response, next){
   }
   
 });
+
+*/
 
 
 
@@ -97,7 +101,7 @@ app.listen(process.env.PORT || 3000, function(err) {
     return console.error(err);
   }
 
-  console.log('Listening at http://localhost:3000/');
+  console.log('Listening at ' + process.env.BASE_URL);
 });
 
 // ------------------------------------------------------------ MISC FUNCTIONS ---------------------------------------------------------------------------
