@@ -10,18 +10,9 @@ h1, h2, h3, h4, th, li, .navbar-text, .navbar-brand, label, .btn{
   text-align: center;
 }
 
-p, .basic, input[type='text'] {
-  font-family: 'Quicksand', sans-serif;
-}
-
 .basic, input[type='text'] {
+  font-family: 'Quicksand', sans-serif;
   font-size: 20px;
-}
-
-h1 {
-  font-family: 'Megrim', cursive;
-  margin-bottom: 50px;
-  font-size: 80px;
 }
 
 .centre{
@@ -31,31 +22,10 @@ h1 {
   justify-content: center;
 }
 
-
-label {
-  margin-right: 2%;
-}
-
-#welcome {
-  margin-bottom: 40px;
-}
-
-#results {
-  width: 80%;
-  margin-top: 3%;
-}
-
-.img_result {
-  width: 120px;
-  height: 180px;
-}
-
-.img_result:hover {
+#notice_box {
+  width: 50%;
   border: solid;
-  border-color: black;
-  border-width: 2px;
-}
-
-body {
-  overflow-x: hidden;
+  border-width: 1px;
+  padding: 30px;
+  border-radius: 10px;
 }

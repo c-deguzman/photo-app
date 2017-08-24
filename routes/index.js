@@ -22,6 +22,10 @@ module.exports = function(app){
 	get_info.get_books(app);
 	get_info.get_book(app);
 
+	get_info.set_disp(app);
+
+	/*
+
 	get_info.get_user_info(app);
 	get_info.update_info(app);
 	get_info.get_sim_users(app);
@@ -33,6 +37,8 @@ module.exports = function(app){
 
 	get_info.reject(app);
 	get_info.valid_id(app);
+
+	*/
 
 	var basic_routes = require('./basic_routes.js');
 

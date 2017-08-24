@@ -6,16 +6,7 @@ module.exports = function(app){
 	var ReactDOM = require('react-dom/server');
 
 	app.get('/', function (request, response){
-	  var Base_App = require(process.env.ROOT + "/src/Base.js").default;
-	  var Base_html = require(process.env.ROOT + "/src/base_template").default;
-	  
-	  var Comp_Fact = React.createFactory(Base_App);
-	  const Base_string = ReactDOM.renderToString(Comp_Fact());
-	  
-	  response.send(Base_html({
-	    body: Base_string,
-	    title: "Book Trading App"
-	  }));
+		response.redirect("/home");
 	});
 
 
@@ -36,7 +27,7 @@ module.exports = function(app){
 	  
 	  response.send(Login_html({
 	    body: Login_string,
-	    title: "Book Trading App"
+	    title: "Login"
 	  }));
 	});
 
@@ -66,6 +57,7 @@ module.exports = function(app){
 	  }));
 	});
 
+	
 	app.get('/add_book', function(request, response) {
 	  var App = require(process.env.ROOT + "/src/AddBook.js").default;
 	  var Html = require(process.env.ROOT + "/src/addBook_template").default;
@@ -79,55 +71,40 @@ module.exports = function(app){
 	  }));
 	});
 
-	app.get('/user_settings', function(request, response) {
-	  var App = require(process.env.ROOT + "/src/Settings.js").default;
-	  var Html = require(process.env.ROOT + "/src/settings_template").default;
-
-	  var Comp_Fact = React.createFactory(App);
-	  const React_string = ReactDOM.renderToString(Comp_Fact());
-	  
-	  response.send(Html({
-	    body: React_string,
-	    title: "Change User Profile"
-	  }));
-	});
-
-	app.get('/my_books', function(request, response) {
-	  var App = require(process.env.ROOT + "/src/MyBooks.js").default;
-	  var Html = require(process.env.ROOT + "/src/myBooks_template").default;
-
-	  var Comp_Fact = React.createFactory(App);
-	  const React_string = ReactDOM.renderToString(Comp_Fact());
-	  
-	  response.send(Html({
-	    body: React_string,
-	    title: "My Requests"
-	  }));
-	});
-
-	app.get('/book', function(request, response) {
-	  var App = require(process.env.ROOT + "/src/ViewBook.js").default;
-	  var Html = require(process.env.ROOT + "/src/viewBook_template").default;
-
-	  var Comp_Fact = React.createFactory(App);
-	  const React_string = ReactDOM.renderToString(Comp_Fact());
-	  
-	  response.send(Html({
-	    body: React_string,
-	    title: "Book Details"
-	  }));
-	});
 
 	app.get('/first', function(request, response) {
-	  var App = require(process.env.ROOT + "/src/FirstNotice.js").default;
-	  var Html = require(process.env.ROOT + "/src/firstNotice_template").default;
+		if (request.isAuthenticated()){
+	  		var App = require(process.env.ROOT + "/src/FirstNotice.js").default;
+		  	var Html = require(process.env.ROOT + "/src/firstNotice_template").default;
 
-	  var Comp_Fact = React.createFactory(App);
-	  const React_string = ReactDOM.renderToString(Comp_Fact());
-	  
-	  response.send(Html({
-	    body: React_string,
-	    title: "First Login"
-	  }));
+		  	var Comp_Fact = React.createFactory(App);
+		  	const React_string = ReactDOM.renderToString(Comp_Fact());
+		  
+		  	response.send(Html({
+		    	body: React_string,
+		    	title: "First Login"
+		  	}));
+	  	} else {
+			response.redirect("/home");
+		}
+	});
+
+
+	app.get('/profile', function(request, response) {
+
+		if (request.isAuthenticated()){
+			var App = require(process.env.ROOT + "/src/Profile.js").default;
+			var Html = require(process.env.ROOT + "/src/profile_template").default;
+
+			var Comp_Fact = React.createFactory(App);
+			const React_string = ReactDOM.renderToString(Comp_Fact());
+
+			response.send(Html({
+				body: React_string,
+				title: "Edit Profile"
+			}));
+		} else {
+			response.redirect("/home");
+		}
 	});
 }

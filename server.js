@@ -85,11 +85,19 @@ app.use(function(request, response, next){
 */
 
 app.use(function(request, response, next){
-  console.log(request.user);
+  //console.log(request.path);
   return next();
 });
 
+app.use(function(request, response, next){
+  var okay_route = ["/first", "/first/", "/logout/", "/logout", "/set_disp", "/set_disp/"];
 
+  if (request.isAuthenticated() && request.user.firstTime && okay_route.indexOf(request.path) == -1){
+    response.redirect("/first");
+  } else {
+    return next();
+  }
+});
 
 // ------------------------------------------------------------ ROUTES ---------------------------------------------------------------------------
 

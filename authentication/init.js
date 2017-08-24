@@ -5,7 +5,7 @@ const TwitterStrategy = require('passport-twitter').Strategy
 var MongoClient = require('mongodb').MongoClient;
 
 
-function findUserLocal(username, callback){
+function findLocalUser(username, callback){
 
   MongoClient.connect(process.env.MONGO_CONNECT, function (err, db){
     if (err){
@@ -68,8 +68,7 @@ function findTwitterUser(twitterID, callback){
             if (err){
               return callback(err);
             }
-
-            console.log(result.ops);
+            
             db.close();
 
             return callback(null, result.ops[0]);

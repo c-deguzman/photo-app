@@ -10,9 +10,9 @@ module.exports = {
     app.post('/get_user', function(request, response){
       if (!request.isAuthenticated()){
         response.send(false);
+      } else {
+        response.send(request.user.displayName);
       }
-      
-      response.send(request.user);
     });
   },
 
@@ -331,9 +331,11 @@ module.exports = {
     });
   },
 
-  get_poster_info(app){
-    app.post("/get_poster_info", function(request, response){
+  set_disp(app){
+    app.post("/set_disp", function(request, response){
       var MongoClient = require('mongodb').MongoClient;
+
+      var displayName = request.body.displayName;
 
       MongoClient.connect(process.env.MONGO_CONNECT, function (err, db){
         if (err){
@@ -344,90 +346,49 @@ module.exports = {
         db.collection("accounts", function (err, collection){
 
           if (err){
-            throw err;
+            response.send({
+              result: "error",
+              error: "Database connection failed."
+            });
             return;
-          } 
+          }
 
-          collection.findOne({user: request.body.user}, function(err, doc){
+          collection.updateOne({user: request.user.user, twitterID: request.user.twitterID, pass: request.user.pass}, {$set: {displayName: displayName, firstTime: false}}, function(err, result){
             if (err){
-              throw err;
+              response.send({
+                result: "error",
+                error: "User information update failed."
+              });
               return;
             }
 
-            var location;
-
-            if (doc.city != "" && doc.prov != ""){
-              location = "(" + doc.city + ", " + doc.prov + ")";
-            } else if (doc.city != ""){
-              location = "(" + doc.city + ")";
-            } else if (doc.prov != ""){
-              location = "(" + doc.prov + ")";
-            } else {
-              location = "";
-            }
-
-            response.send(location);
-            
-          });  
-        });
-      });
-    });
-  },
-
-  get_sim_users(app){
-    app.post("/get_sim_users", function(request, response){
-      var MongoClient = require('mongodb').MongoClient;
-
-      var mode = request.body.mode;
-
-
-      MongoClient.connect(process.env.MONGO_CONNECT, function (err, db){
-        if (err){
-          throw err;
-          return;
-        }
-
-        db.collection("accounts", function (err, collection){
-
-          if (err){
-            throw err;
-            return;
-          } 
-
-          collection.findOne({user: request.user}, function(err, doc){
-            if (err){
-              throw err;
-              return;
-            }
-
-            var goal_city = doc.city;
-            var goal_prov = doc.prov;
-
-            var q;
-
-            if (mode == "city"){
-              q = {city: goal_city};
-            } else {
-              q = {prov: goal_prov};
-            }
-
-            collection.find(q).toArray(function(err, docs){
+            collection.findOne({user: request.user.user, twitterID: request.user.twitterID, pass: request.user.pass}, function(err, doc){
               if (err){
-                throw err;
+                response.send({
+                  result: "error",
+                  error: "User information update failed."
+                });
                 return;
               }
-              
-              var return_arr = [];
 
-              for (var i in docs){
-                return_arr.push(docs[i].user);
-              }
+              request.login(doc, function(err) {
+                if (err){
+                  response.send({
+                    result: "error",
+                    error: "Relogging failed."
+                  });
+                  return;
+                }
 
-              response.send(return_arr);
+                response.send({
+                  result: "success",
+                  error: ""
+                });
+              });
             });
           });  
         });
       });
     });
-  },
+  }
 }

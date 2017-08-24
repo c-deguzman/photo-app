@@ -8,7 +8,9 @@ module.exports = {
     web_pack_middle: 'webpack-hot-middleware/client',
     login: './src/login_index',
     register: './src/register_index',
-    home: './src/home_index'
+    home: './src/home_index',
+    firstNotice: './src/firstNotice_index',
+    profile: './src/profile_index'
   },
   output: {
     path: path.join(__dirname, 'dist'),

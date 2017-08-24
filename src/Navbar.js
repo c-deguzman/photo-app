@@ -23,15 +23,15 @@ export default class Navbar extends React.Component {
 
 		            <ul className="nav navbar-nav">
 		              <li className="active"><a href="/home">Home</a></li>
-		              <li><a href="/add_book">Add Book</a></li>
-		              <li><a href="/my_books">My Requests</a></li>
+		              <li><a href="/add_pic">Add Pic</a></li>
+		              <li><a href="/my_pics">My Pictures</a></li>
 		            </ul> 
 		             
 		            <p className="navbar-text"> Signed in as {this.props.user} </p> 
 		           
 		            <ul className="nav navbar-nav navbar-right">
-		              <li><a href="/user_settings"><span className="glyphicon glyphicon-cog" /> Profile </a></li>
-		              <li><a href="/logout"><span className="glyphicon glyphicon-log-out" /> Logout </a></li>
+		            	<li><a href="/profile"><span className="glyphicon glyphicon-user" /> Profile </a></li>
+		              	<li><a href="/logout"><span className="glyphicon glyphicon-log-out" /> Logout </a></li>
 		            </ul> 
 	          	</div>
 	        </nav>
