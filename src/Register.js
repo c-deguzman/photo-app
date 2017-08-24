@@ -1,6 +1,7 @@
 import React from 'react';
 import $ from "jquery";
 import Alert from './Alert';
+import Navbar from './Navbar';
 
 
 export default class Register extends React.Component {
@@ -52,22 +53,7 @@ export default class Register extends React.Component {
   render() {
     return (
       <div>
-        <nav className="navbar navbar-default">
-          <div className="container-fluid">
-            <div className="navbar-header">
-              <div className="navbar-header">
-                <a className="navbar-brand" href="/">Book App Epsilon</a>
-            </div>
-            </div>
-
-            <p className="navbar-text">Not signed in</p>
-            
-            <ul className="nav navbar-nav navbar-right">
-              <li className="active"><a href="#"><span className="glyphicon glyphicon-user"></span> Sign Up</a></li>
-              <li><a href="/login"><span className="glyphicon glyphicon-log-in"></span> Login</a></li>
-            </ul> 
-          </div>
-        </nav>
+        <Navbar logged_in={false} />
 
         <h1 className="centre">Register</h1>
         

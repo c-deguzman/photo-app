@@ -1,14 +1,6 @@
 module.exports = function(app){
   
   app.post('/register', function(request, response) {    
-    var forwardedIpsStr = request.header('x-forwarded-for');
-     var IP = 'localhost';
-
-     if (forwardedIpsStr) {
-        IP = forwardedIpsStr.split(',')[0] || request.connection.remoteAddress;  
-     } else {
-        IP = request.ip || request.connection.remoteAddress;
-     }
 
     var MongoClient = require('mongodb').MongoClient;
     
@@ -17,10 +9,9 @@ module.exports = function(app){
     
     var document = {user: username,
                     pass: password,
-                    ip: IP,
-                    name: "",
-                    prov: "",
-                    city: ""
+                    twitterID: "",
+                    displayName: "",
+                    firstTime: true
                   };
 
     MongoClient.connect(process.env.MONGO_CONNECT, function (err, db){
@@ -47,27 +38,14 @@ module.exports = function(app){
                            "error" : "Username already taken."});
           } else {
             
-            collection.findOne({"ip": IP}, function (err, result){
-              if (err){
+            collection.insert(document, function(err, records){
+              
+              if(err){
                 throw err;
-                return;
               }
-
-              if (result){
-                response.status(200).send({"result": "error",
-                                "error" : "One account per person please."});
-              } else {
-                
-                collection.insert(document, function(err, records){
-                  
-                  if(err){
-                    throw err;
-                  }
-                  
-                  response.status(200).send({"result": "success"});
-                }); 
-              }
-            });
+              
+              response.status(200).send({"result": "success"});
+            }); 
           }
         });        
       });

@@ -8,12 +8,7 @@ module.exports = {
     web_pack_middle: 'webpack-hot-middleware/client',
     login: './src/login_index',
     register: './src/register_index',
-    home: './src/home_index',
-    addBook: './src/addBook_index',
-    base: './src/base_index',
-    settings: './src/settings_index',
-    myBooks: './src/myBooks_index',
-    viewBook: './src/viewBook_index'
+    home: './src/home_index'
   },
   output: {
     path: path.join(__dirname, 'dist'),

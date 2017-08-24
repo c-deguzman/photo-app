@@ -51,14 +51,30 @@ function findTwitterUser(twitterID, callback){
 
       collection.findOne({"twitterID": twitterID}, function (err, result){
 
-        db.close();
-
         if (err) {
           return callback(err);
+        } else if (result){
+          return callback(null, result);
+        } else {
+
+          var doc = {user: "",
+                    pass: "",
+                    twitterID: twitterID,
+                    displayName: "",
+                    firstTime: true
+                  };
+
+          collection.insertOne(doc, function (err,result){
+            if (err){
+              return callback(err);
+            }
+
+            console.log(result.ops);
+            db.close();
+
+            return callback(null, result.ops[0]);
+          });
         }
-        
-        return callback(null, result);
-      
       });
     });
   });
@@ -97,8 +113,6 @@ function initPassport () {
     consumerSecret: process.env.TWITTER_SECRET,
     callbackURL: process.env.BASE_URL + "/auth/twitter/callback"
   }, function(token, tokenSecret, profile, done) {
-
-    //console.log(profile);
 
     findTwitterUser(profile.id , function (err, user) {
       if (err) {

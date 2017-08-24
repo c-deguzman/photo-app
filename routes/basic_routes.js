@@ -117,4 +117,17 @@ module.exports = function(app){
 	    title: "Book Details"
 	  }));
 	});
+
+	app.get('/first', function(request, response) {
+	  var App = require(process.env.ROOT + "/src/FirstNotice.js").default;
+	  var Html = require(process.env.ROOT + "/src/firstNotice_template").default;
+
+	  var Comp_Fact = React.createFactory(App);
+	  const React_string = ReactDOM.renderToString(Comp_Fact());
+	  
+	  response.send(Html({
+	    body: React_string,
+	    title: "First Login"
+	  }));
+	});
 }

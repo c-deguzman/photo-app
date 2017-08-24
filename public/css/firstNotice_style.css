@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css?family=Megrim|Quicksand');
+
+h1, h2, h3, h4, th, li, .navbar-text, .navbar-brand, label, .btn{
+  font-family: 'Megrim', cursive;
+}
+
+#title {
+  font-family: 'Megrim', cursive;
+  font-size: 50px;
+  text-align: center;
+}
+
+.basic, input[type='text'] {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 20px;
+}
+
+.centre{
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+#notice_box {
+  width: 50%;
+  border: solid;
+  border-width: 1px;
+  padding: 30px;
+  border-radius: 10px;
+}

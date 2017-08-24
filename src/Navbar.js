@@ -13,7 +13,7 @@ export default class Navbar extends React.Component {
 
 		if (this.props.logged_in){
 			return (
-			<nav className="navbar navbar-default">
+			<nav className="navbar navbar-default navbar-inverse navbar-static-top">
 	      		<div className="container-fluid">
 		            <div className="navbar-header">
 		              <div className="navbar-header">
@@ -38,7 +38,7 @@ export default class Navbar extends React.Component {
 			);
 		} else {
 			return (
-			<nav className="navbar navbar-default">
+			<nav className="navbar navbar-default navbar-inverse navbar-static-top">
 	      		<div className="container-fluid">
 		            <div className="navbar-header">
 		              	<div className="navbar-header">
@@ -60,6 +60,5 @@ export default class Navbar extends React.Component {
 	        </nav>
 			);
 		}
-		
 	}
 }

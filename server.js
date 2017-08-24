@@ -84,6 +84,11 @@ app.use(function(request, response, next){
 
 */
 
+app.use(function(request, response, next){
+  console.log(request.user);
+  return next();
+});
+
 
 
 // ------------------------------------------------------------ ROUTES ---------------------------------------------------------------------------

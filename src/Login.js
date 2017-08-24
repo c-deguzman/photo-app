@@ -1,5 +1,6 @@
 import React from 'react';
 import Alert from './Alert';
+import Navbar from './Navbar';
 
 export default class Login extends React.Component {
 
@@ -51,22 +52,7 @@ export default class Login extends React.Component {
       return (
         
         <div>
-        <nav className="navbar navbar-default">
-          <div className="container-fluid">
-            <div className="navbar-header">
-              <div className="navbar-header">
-                <a className="navbar-brand" href="/">Book App Epsilon</a>
-            </div>
-            </div>
-            
-            <p className="navbar-text">Not signed in</p>
-            
-            <ul className="nav navbar-nav navbar-right">
-              <li><a href="/register"><span className="glyphicon glyphicon-user"></span> Sign Up</a></li>
-              <li className="active"><a href="#"><span className="glyphicon glyphicon-log-in"></span> Login</a></li>
-            </ul> 
-          </div>
-        </nav>
+        <Navbar logged_in={false} />
 
         <h1 className="centre">Login Portal</h1>
         
