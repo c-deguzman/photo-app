@@ -14,6 +14,7 @@ export default class AddPic extends React.Component {
       this.componentDidMount = this.componentDidMount.bind(this);
       this.changeDesc = this.changeDesc.bind(this);
       this.onChange = this.onChange.bind(this);
+      this._onLoad = this._onLoad.bind(this);
 
       
       this.state = {
@@ -22,7 +23,8 @@ export default class AddPic extends React.Component {
         pic_url: "",
         pic_desc: "",
         no_img: "https://pbs.twimg.com/profile_images/600060188872155136/st4Sp6Aw.jpg",
-        error_show: false
+        error_show: false,
+        pic_h: 200
       }
     }
   
@@ -51,7 +53,8 @@ export default class AddPic extends React.Component {
           contentType: 'application/json',
           data: JSON.stringify({
     			 url: this.state.pic_url,
-    			 desc: this.state.pic_desc
+    			 desc: this.state.pic_desc,
+           height: this.state.pic_h
     		  })
         }).done((data) => {
         	this.setState({
@@ -62,7 +65,8 @@ export default class AddPic extends React.Component {
             if (this.state.result == "success"){
               this.setState({
                 pic_url: "", 
-                pic_desc: ""
+                pic_desc: "",
+                pic_h: 200
               })
             }
           })
@@ -80,6 +84,12 @@ export default class AddPic extends React.Component {
     	this.setState({
     		pic_desc: event.target.value
     	});
+    }
+
+    _onLoad(event){
+      this.setState({
+        pic_h: event.target.height
+      });
     }
 
 
@@ -117,8 +127,13 @@ export default class AddPic extends React.Component {
                   					ref={img => this.img = img}
                   					onError={() => {
                   									this.img.src = this.state.no_img;
+
+                                    this.setState({
+                                      pic_h: 200
+                                    });
                   									}
                   								} 
+                            onLoad={this._onLoad}
                   					/>
                           </div>
                       

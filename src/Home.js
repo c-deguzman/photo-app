@@ -4,6 +4,7 @@ import Navbar from './Navbar';
 import Alert from './Alert';
 import Confirm from 'react-confirm-bootstrap';
 import MasonryInfiniteScroller from 'react-masonry-infinite';
+import update from 'immutability-helper';
 
 
 export default class Profile extends React.Component {
@@ -12,9 +13,12 @@ export default class Profile extends React.Component {
     
     this.render = this.render.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
+    this.like_pic = this.like_pic.bind(this);
+    this.unlike_pic = this.unlike_pic.bind(this);
 
     this.state = {
       pics: [],
+      my_likes: [],
       user: false,
       no_img: "https://pbs.twimg.com/profile_images/600060188872155136/st4Sp6Aw.jpg"
     }
@@ -30,19 +34,79 @@ export default class Profile extends React.Component {
     }).done((data_user) => {
       this.setState({
         user: data_user
-      }, () => {
-
-        $.ajax({
-          type: "POST",
-          url: "/get_pics",
-          contentType: 'application/json'
-        }).done((data_pics) => {
-          this.setState({
-            pics: data_pics
-          })
-        });
-
       });
+    });
+
+    $.ajax({
+      type: "POST",
+      url: "/get_pics",
+      contentType: 'application/json'
+    }).done((data_pics) => {
+      this.setState({
+        pics: data_pics
+      })
+    });
+
+    $.ajax({
+      type: "POST",
+      url: "/get_likes",
+      contentType: 'application/json'
+    }).done((data_likes) => {
+      this.setState({
+        my_likes: data_likes
+      })
+    });
+  }
+
+  like_pic(index){
+    $.ajax({
+      type: "POST",
+      url: "/like",
+      contentType: 'application/json',
+      data: JSON.stringify({id: this.state.pics[index]._id})
+    }).done((data) => {
+
+      if (data.result == "success"){
+        var newState = update(this.state, {
+                             pics: {
+                                [index]: {
+                                   likes: { $set: this.state.pics[index].likes + 1}
+                                 }                                                      
+                            }
+                          });
+
+        this.setState(newState);
+        this.setState({
+          my_likes: this.state.my_likes.concat([this.state.pics[index]._id])
+        });
+      }
+
+    });
+  }
+
+  unlike_pic(index){
+    $.ajax({
+      type: "POST",
+      url: "/unlike",
+      contentType: 'application/json',
+      data: JSON.stringify({id: this.state.pics[index]._id})
+    }).done((data) => {
+
+      if (data.result == "success"){
+        var newState = update(this.state, {
+                             pics: {
+                                [index]: {
+                                   likes: { $set: this.state.pics[index].likes - 1}
+                                 }                                                      
+                            }
+                          });
+
+        this.setState(newState);
+        this.setState({
+          my_likes: this.state.my_likes.filter((item) => (item != this.state.pics[index]._id))
+        });
+      }
+
     });
   }
 
@@ -53,8 +117,14 @@ export default class Profile extends React.Component {
         <Navbar logged_in={this.state.user !== false} user={this.state.user} curr="home"/> 
         
         <div className="page-header container">
-            <h2 className="centre"> Recent Pictures </h2> 
+            <h1 className="centre"> Recent Pictures </h1> 
         </div>
+
+        { 
+          this.state.user === false ? 
+            <p className="centre"> <i className="em em-cry" /> You can't like photos while signed out <i className="em em-broken_heart" /></p> :
+            null
+        }
         
         <div className="centre">
         {
@@ -77,14 +147,38 @@ export default class Profile extends React.Component {
                     <div>
                     <img src={this.state.pics[i].url} 
                       id="preview_pic"
-                      ref={img => this.img = img}
-                      onError={() => {
-                              this.img.src = this.state.no_img;
+                      onError={(event) => {
+
+                              var newState = update(this.state, {
+                                                     pics: {
+                                                        [i]: {
+                                                           url: { $set: this.state.no_img}
+                                                         }                                                      
+                                                    }
+                                                  });
+
+                              this.setState(newState);
                               }
                             } 
+                      height={this.state.pics[i].height}
                       />
                       
-                    <p className="centre">{this.state.pics[i].desc}</p>
+                    <p className={"centre" + (this.state.pics[i].desc != "" ? " desc" : "")}>{this.state.pics[i].desc}</p>
+                    <div className="post_info">
+                      <i className="em em-bust_in_silhouette" />
+                      { (this.state.user !== false) ?
+                          (this.state.my_likes.indexOf(this.state.pics[i]._id) == -1) ?
+                            <p className="right"> 
+                              <i className="em em-heart" onClick={() => this.like_pic(i)}/> {this.state.pics[i].likes} 
+                            </p> :
+                            <p className="right"> 
+                              <i className="em em-sparkling_heart" onClick={() => this.unlike_pic(i)}/> {this.state.pics[i].likes} 
+                            </p> :
+                          <p className="right"> 
+                            <i className="em em-heart"/> {this.state.pics[i].likes} 
+                          </p> 
+                      }
+                      </div>
                     </div>
                   </div>)
             }

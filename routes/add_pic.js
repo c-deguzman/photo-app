@@ -10,6 +10,7 @@ module.exports = function(app){
 			desc: request.body.desc,
 			name: request.user.displayName,
 			user_id: request.user._id,
+			height: request.body.height,
 			time: time,
 			likes: 0
 		};	 

@@ -50,7 +50,7 @@
     "passport-twitter": "^1.0.4",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
-    "react-google-charts": "^1.5.5",
+    "immutability-helper": "^2.3.1",
     "express-public-ip": "^1.0.1",
     "webpack": "^1.12.2",
     "webpack-dev-middleware": "^1.6.1",

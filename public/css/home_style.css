@@ -20,8 +20,7 @@ p, .basic, input[type='text'] {
 
 h1 {
   font-family: 'Megrim', cursive;
-  margin-bottom: 50px;
-  font-size: 80px;
+  font-weight: bold;
 }
 
 .centre{
@@ -62,8 +61,7 @@ body {
 
 #preview_pic {
   border: solid;
-  border-width: 2px;
-  max-width: 250px;
+  width: 250px;
 }
 
 
@@ -80,4 +78,16 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.right {
+  float: right;
+}
+
+.post_info {
+  padding: 10px;
+}
+
+.desc {
+  margin-top: 40px;
 }
