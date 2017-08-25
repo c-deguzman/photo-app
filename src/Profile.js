@@ -40,8 +40,6 @@ export default class FirstNotice extends React.Component {
 
       var disp = event.target.disp.value;
 
-      console.log(disp);
-
       $.ajax({
         type: "POST",
         url: "/set_disp",

@@ -23,6 +23,7 @@ module.exports = function(app){
 	get_info.get_user(app);
 	get_info.get_id(app);
 	get_info.get_user_disp(app);
+	get_info.set_disp(app);
 
 	get_info.get_pics(app);
 	get_info.get_pics_user(app);
