@@ -107,4 +107,19 @@ module.exports = function(app){
 			response.redirect("/home");
 		}
 	});
+
+	app.get('/user', function(request, response) {
+
+		var App = require(process.env.ROOT + "/src/UserWall.js").default;
+		var Html = require(process.env.ROOT + "/src/userWall_template").default;
+
+		var Comp_Fact = React.createFactory(App);
+		const React_string = ReactDOM.renderToString(Comp_Fact());
+
+		response.send(Html({
+			body: React_string,
+			title: "User Pictures"
+		}));
+		
+	});
 }

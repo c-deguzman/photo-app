@@ -7,7 +7,7 @@ import MasonryInfiniteScroller from 'react-masonry-infinite';
 import update from 'immutability-helper';
 
 
-export default class Home extends React.Component {
+export default class UserWall extends React.Component {
   constructor(props){
     super(props);
     
@@ -15,18 +15,22 @@ export default class Home extends React.Component {
     this.componentDidMount = this.componentDidMount.bind(this);
     this.like_pic = this.like_pic.bind(this);
     this.unlike_pic = this.unlike_pic.bind(this);
+    this.delete = this.delete.bind(this);
 
     this.state = {
+      my_id: "",
       pics: [],
       my_likes: [],
+      user_disp: false,
       user: false,
-      no_img: "https://pbs.twimg.com/profile_images/600060188872155136/st4Sp6Aw.jpg"
+      no_img: "https://pbs.twimg.com/profile_images/600060188872155136/st4Sp6Aw.jpg",
+      mounted: false
     }
   }
   
   
   componentDidMount() {
-    
+
     $.ajax({
       type: "POST",
       url: "/get_user",
@@ -39,12 +43,37 @@ export default class Home extends React.Component {
 
     $.ajax({
       type: "POST",
-      url: "/get_pics",
+      url: "/get_id",
       contentType: 'application/json'
+    }).done((data_user) => {
+      this.setState({
+        my_id: data_user,
+        mounted: true
+      });
+    });
+
+    var id = (new URL(document.location)).searchParams.get("id");
+
+    $.ajax({
+      type: "POST",
+      url: "/get_pics_user",
+      contentType: 'application/json',
+      data: JSON.stringify({id: id})
     }).done((data_pics) => {
       this.setState({
         pics: data_pics
       })
+    });
+
+    $.ajax({
+      type: "POST",
+      url: "/get_user_disp",
+      contentType: 'application/json',
+      data: JSON.stringify({id: id})
+    }).done((data_user) => {
+      this.setState({
+        user_disp: data_user
+      });
     });
 
     $.ajax({
@@ -110,14 +139,44 @@ export default class Home extends React.Component {
     });
   }
 
+  delete(index){
+    $.ajax({
+      type: "POST",
+      url: "/delete",
+      contentType: 'application/json',
+      data: JSON.stringify({id: this.state.pics[index]._id})
+    }).done((data) => {
+      if (data.result == "success"){
+        this.setState({
+          pics: this.state.pics.filter((item) => (item != this.state.pics[index]._id))
+        }, () =>
+        {
+          window.location.reload();
+        });
+      }
+    });
+  }
+
   render() {
     return (
       <div >
 
-        <Navbar logged_in={this.state.user !== false} user={this.state.user} curr="home"/> 
+        {
+          (this.state.mounted && this.state.my_id == (new URL(document.location)).searchParams.get("id") && this.state.my_id !== false) ?
+            <Navbar logged_in={this.state.user !== false} user={this.state.user} curr="my_pics"/>  :
+            <Navbar logged_in={this.state.user !== false} user={this.state.user} curr=""/> 
+        }
+
+        
         
         <div className="page-header container">
-            <h1 className="centre"> Recent Pictures </h1> 
+          {
+            this.state.user_disp !== false ?
+              (this.state.my_id == (new URL(document.location)).searchParams.get("id") && this.state.my_id !== false) ?
+              <h1 className="centre"> Your Recent Pictures </h1> :
+              <h1 className="centre"> {this.state.user_disp}'s Recent Pictures </h1> :
+              <h1 className="centre"> <i className="em em-cry" /> User not found! </h1>
+          }
         </div>
 
         { 
@@ -140,11 +199,18 @@ export default class Home extends React.Component {
                 { mq: '1050px', columns: 4, gutter: 20 },
                 { mq: '1400px', columns: 5, gutter: 20 }
                 ]}
-              >
+                ref={instance => { this.masonry = instance; }} 
+                >
             {
                 this.state.pics.map((item,i) => 
                   <div key={i} className="card centre">
                     <div>
+                    <div className="img-wrap">
+                    {
+                      (this.state.my_id == (new URL(document.location)).searchParams.get("id") && this.state.my_id !== false) ?
+                        <span className="close" onClick={() => this.delete(i)}>&times;</span> :
+                        null
+                    }
                     <img src={this.state.pics[i].url} 
                       id="preview_pic"
                       onError={(event) => {
@@ -162,6 +228,7 @@ export default class Home extends React.Component {
                             } 
                       height={this.state.pics[i].height}
                       />
+                    </div>
                       
                     <p className={"centre" + (this.state.pics[i].desc != "" ? " desc" : "")}>{this.state.pics[i].desc}</p>
                     <div className="post_info">

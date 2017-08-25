@@ -6,7 +6,7 @@ export default ({ body, title}) => {
       <head>
         <title>${title}</title>
         <meta name="description" content="Pinterest Clone.">
-        <link id="favicon" rel="icon" href="https://cdn.glitch.com/9fe65a69-39fd-4224-a943-919f30ec7ac8%2Ffavicon%20(2).ico?1503588258679" type="image/x-icon">
+        <link id="favicon" rel="icon" href="/icon/favicon.ico" type="image/x-icon">
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">

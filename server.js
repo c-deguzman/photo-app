@@ -34,7 +34,7 @@ require('./authentication').init(app);
 
 app.use(cookieParser());
 
-//app.use(cors({origin: "https://photo-app-zeta.herokuapp.com/"}));
+app.use(cors({origin: "https://photo-app-zeta.herokuapp.com/"}));
 
 app.use(session({  
   store: new RedisStore({
@@ -65,28 +65,16 @@ app.use(bodyParser.urlencoded({
 
 app.enable('trust proxy');
 
-/*
-
 app.use(function(request, response, next){
+  var okay_route = ["/my_pics", "/my_pics/"];
 
-  var unauth_paths = ["/login", "/login/", "/register", "/register/", "/"];
-
-  if ((!request.isAuthenticated() && unauth_paths.indexOf(request.path) != -1) ||
-        request.isAuthenticated() && unauth_paths.indexOf(request.path) == -1){
-    return next();
-  } else if  (!request.isAuthenticated() && unauth_paths.indexOf(request.path) == -1){
-    response.redirect("/");
-  } else if (request.isAuthenticated() && unauth_paths.indexOf(request.path) != -1){
+  if (request.isAuthenticated() && okay_route.indexOf(request.path) != -1){
+    response.redirect("/user?id=" + request.user._id);
+  } else if (request.isAuthenticated() == false && okay_route.indexOf(request.path) != -1){
     response.redirect("/home");
+  } else {
+    return next();
   }
-  
-});
-
-*/
-
-app.use(function(request, response, next){
-  //console.log(request.path);
-  return next();
 });
 
 app.use(function(request, response, next){

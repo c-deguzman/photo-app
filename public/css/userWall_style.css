@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css?family=Megrim|Quicksand');
+
+h1, h2, h3, h4, th, li, .navbar-text, .navbar-brand, label, .btn{
+  font-family: 'Megrim', cursive;
+}
+
+#title {
+  font-family: 'Megrim', cursive;
+  font-size: 50px;
+  text-align: center;
+}
+
+p, .basic, input[type='text'] {
+  font-family: 'Quicksand', sans-serif;
+}
+
+.basic, input[type='text'] {
+  font-size: 20px;
+}
+
+h1 {
+  font-family: 'Megrim', cursive;
+  font-weight: bold;
+}
+
+.centre{
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+
+label {
+  margin-right: 2%;
+}
+
+#welcome {
+  margin-bottom: 40px;
+}
+
+#results {
+  width: 80%;
+  margin-top: 3%;
+}
+
+.img_result {
+  width: 120px;
+  height: 180px;
+}
+
+.img_result:hover {
+  border: solid;
+  border-color: black;
+  border-width: 2px;
+}
+
+body {
+  
+}
+
+#preview_pic {
+  border: solid;
+  width: 250px;
+}
+
+
+.masonry {
+  max-width: 100%;
+  width: 100%;
+  min-width: 100%;
+}
+
+.card {
+  width: 250px;
+  min-height: 100px;
+  box-shadow: 10px 10px 5px grey;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.right {
+  float: right;
+}
+
+.post_info {
+  padding: 10px;
+}
+
+.desc {
+  margin-top: 40px;
+}
+
+.close {
+  position: absolute;
+  margin-left: 225px;
+  margin-top: 5px;
+  color: red;
+  opacity: 0.5;
+}

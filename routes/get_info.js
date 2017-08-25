@@ -10,6 +10,16 @@ module.exports = {
     });
   },
 
+  get_id(app){
+    app.post('/get_id', function(request, response){
+      if (!request.isAuthenticated()){
+        response.send(false);
+      } else {
+        response.send(request.user._id);
+      }
+    });
+  },
+
   get_likes(app){
     app.post('/get_likes', function(request, response){
 
@@ -81,7 +91,7 @@ module.exports = {
             } else if (doc){
               response.send(doc.displayName);
             } else {
-              response.send("");
+              response.send(false);
             }
           });
         });
@@ -108,6 +118,38 @@ module.exports = {
           } 
 
           collection.find({}, {"sort" : [['time', 'descending']]}).toArray(function (err, documents) {
+
+            if (err){
+              throw err;
+              return;
+            }
+
+            response.send(documents);
+          });   
+        });
+      });
+    });
+  },
+
+  get_pics_user(app){
+    app.post('/get_pics_user', function(request, response) {
+      
+      var MongoClient = require('mongodb').MongoClient;
+
+      MongoClient.connect(process.env.MONGO_CONNECT, function (err, db){
+        if (err){
+          throw err;
+          return;
+        }
+
+        db.collection("photos", function (err, collection){
+
+          if (err){
+            throw err;
+            return;
+          } 
+
+          collection.find({user_id: request.body.id}, {"sort" : [['time', 'descending']]}).toArray(function (err, documents) {
 
             if (err){
               throw err;
