@@ -58,16 +58,16 @@ module.exports = function(app){
 	});
 
 	
-	app.get('/add_book', function(request, response) {
-	  var App = require(process.env.ROOT + "/src/AddBook.js").default;
-	  var Html = require(process.env.ROOT + "/src/addBook_template").default;
+	app.get('/add_pic', function(request, response) {
+	  var App = require(process.env.ROOT + "/src/AddPic.js").default;
+	  var Html = require(process.env.ROOT + "/src/addPic_template").default;
 
 	  var Comp_Fact = React.createFactory(App);
 	  const React_string = ReactDOM.renderToString(Comp_Fact());
 	  
 	  response.send(Html({
 	    body: React_string,
-	    title: "Add Book"
+	    title: "Add Picture"
 	  }));
 	});
 

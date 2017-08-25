@@ -52,7 +52,7 @@ export default class Login extends React.Component {
       return (
         
         <div>
-        <Navbar logged_in={false} />
+        <Navbar logged_in={false} curr="login"/>
 
         <h1 className="centre">Login Portal</h1>
         

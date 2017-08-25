@@ -49,7 +49,7 @@ export default class FirstNotice extends React.Component {
   render(){
     return (
       <div>
-        <Navbar logged_in={true} user="???"/>
+        <Navbar logged_in={true} user="???" curr=""/>
         <div className="centre">
           <div id="notice_box">
             <h1 id="title"> Hey there! </h1>

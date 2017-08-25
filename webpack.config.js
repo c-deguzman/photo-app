@@ -10,7 +10,8 @@ module.exports = {
     register: './src/register_index',
     home: './src/home_index',
     firstNotice: './src/firstNotice_index',
-    profile: './src/profile_index'
+    profile: './src/profile_index',
+    addPic: './src/addPic_index'
   },
   output: {
     path: path.join(__dirname, 'dist'),

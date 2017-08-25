@@ -5,7 +5,6 @@ export default class Navbar extends React.Component {
 
 	constructor (props){
 		super(props);
-
 		this.render = this.render.bind(this);
 	}
 
@@ -22,15 +21,15 @@ export default class Navbar extends React.Component {
 		            </div>
 
 		            <ul className="nav navbar-nav">
-		              <li className="active"><a href="/home">Home</a></li>
-		              <li><a href="/add_pic">Add Pic</a></li>
-		              <li><a href="/my_pics">My Pictures</a></li>
+		              <li className={this.props.curr == "home" ? "active" : ""}><a href="/home">Home</a></li>
+		              <li className={this.props.curr == "add_pic" ? "active" : ""}><a href="/add_pic">Add Photo</a></li>
+		              <li className={this.props.curr == "my_pics" ? "active" : ""}><a href="/my_pics">My Photos</a></li>
 		            </ul> 
 		             
 		            <p className="navbar-text"> Signed in as {this.props.user} </p> 
 		           
 		            <ul className="nav navbar-nav navbar-right">
-		            	<li><a href="/profile"><span className="glyphicon glyphicon-user" /> Profile </a></li>
+		            	<li className={this.props.curr == "profile" ? "active" : ""}><a href="/profile"><span className="glyphicon glyphicon-user" /> Profile </a></li>
 		              	<li><a href="/logout"><span className="glyphicon glyphicon-log-out" /> Logout </a></li>
 		            </ul> 
 	          	</div>
@@ -47,14 +46,14 @@ export default class Navbar extends React.Component {
 		            </div>
 
 		            <ul className="nav navbar-nav">
-		              	<li className="active"><a href="/home">Home</a></li>
+		              	<li className={this.props.curr == "home" ? "active" : ""}><a href="/home">Home</a></li>
 		            </ul> 
 		             
 		            <p className="navbar-text"> Not signed in </p> 
 		           
 		            <ul className="nav navbar-nav navbar-right">
-		              	<li><a href="/register"><span className="glyphicon glyphicon-user"></span> Sign Up</a></li>
-              			<li><a href="/login"><span className="glyphicon glyphicon-log-in"></span> Login</a></li>
+		              	<li className={this.props.curr == "register" ? "active" : ""}><a href="/register"><span className="glyphicon glyphicon-user"></span> Sign Up</a></li>
+              			<li className={this.props.curr == "login" ? "active" : ""}><a href="/login"><span className="glyphicon glyphicon-log-in"></span> Login</a></li>
 		            </ul> 
 	          	</div>
 	        </nav>

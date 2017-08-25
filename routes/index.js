@@ -2,7 +2,7 @@
 module.exports = function(app){
 	var register = require("./register.js");
 	var get_info = require("./get_info.js");
-	var add_book = require("./add_book.js");
+	var add_pic = require("./add_pic.js");
 	var add_req = require("./add_request.js");
 	var rm_req = require("./rm_request.js");
 	var ac_req = require("./ac_request.js");
@@ -11,15 +11,17 @@ module.exports = function(app){
 
 	login(app);
 	register(app);
-	add_book(app);
+	add_pic(app);
 
 	add_req(app);
 	rm_req(app);
 	ac_req(app);
 	
-	get_info.get_auth(app);
+
 	get_info.get_user(app);
-	get_info.get_books(app);
+	get_info.get_pics(app);
+
+
 	get_info.get_book(app);
 
 	get_info.set_disp(app);

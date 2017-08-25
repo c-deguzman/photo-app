@@ -53,7 +53,7 @@ export default class Register extends React.Component {
   render() {
     return (
       <div>
-        <Navbar logged_in={false} />
+        <Navbar logged_in={false} curr="register"/>
 
         <h1 className="centre">Register</h1>
         

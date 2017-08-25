@@ -1,16 +1,17 @@
 module.exports = function(app){
 	var MongoClient = require('mongodb').MongoClient;
 
-	app.post('/add_book', function(request, response) {
+	app.post('/add_pic', function(request, response) {
 
 		var time = Math.round(new Date().getTime()/1000);
 
 		var add_doc = 	{
-			cover: request.body.cover,
-			title: request.body.title,
-			user: request.user,
-			isbn: request.body.isbn,
-			time: time
+			url: request.body.url,
+			desc: request.body.desc,
+			name: request.user.displayName,
+			user_id: request.user._id,
+			time: time,
+			likes: 0
 		};	 
 
 		 MongoClient.connect(process.env.MONGO_CONNECT, function (err, db){
@@ -21,7 +22,7 @@ module.exports = function(app){
           }
 
 
-	    	db.collection("books", function (err, coll){
+	    	db.collection("photos", function (err, coll){
 	    		if (err){
 		            response.send({"result": "error",
 		        			       "error": "Internal connection ERROR. Please report this to site admin."});

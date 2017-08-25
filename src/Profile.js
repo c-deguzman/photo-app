@@ -71,7 +71,7 @@ export default class FirstNotice extends React.Component {
   render(){
     return (
       <div>
-        <Navbar logged_in={this.state.user !== false} user={this.state.user}/> 
+        <Navbar logged_in={this.state.user !== false} user={this.state.user} curr="profile"/> 
 
         <div className="centre">
           <div id="notice_box">

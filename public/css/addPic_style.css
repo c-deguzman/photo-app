@@ -57,27 +57,14 @@ label {
 }
 
 body {
-  
+  overflow-x: hidden;
 }
+
 
 #preview_pic {
   border: solid;
   border-width: 2px;
-  max-width: 250px;
-}
-
-
-.masonry {
-  max-width: 100%;
-  width: 100%;
-  min-width: 100%;
-}
-
-.card {
-  width: 250px;
-  min-height: 100px;
   box-shadow: 10px 10px 5px grey;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  margin-bottom: 20px;
+  max-width: 250px;
 }

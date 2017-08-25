@@ -1,10 +1,4 @@
 module.exports = {
-
-  get_auth (app){
-    app.post('/get_auth', function(request, response) {
-      response.send(request.isAuthenticated());
-    });
-  },
   
   get_user(app){
     app.post('/get_user', function(request, response){
@@ -16,8 +10,45 @@ module.exports = {
     });
   },
 
-  get_books(app){
-    app.post('/get_books', function(request, response) {
+  get_user_disp(app){
+    app.post('/get_user_disp', function(request, response){
+
+      var MongoClient = require('mongodb').MongoClient;
+      var ObjectId = require('mongodb').ObjectId; 
+      var obj_id = new ObjectId(request.body.id);
+
+      var MongoClient = require('mongodb').MongoClient;
+
+      MongoClient.connect(process.env.MONGO_CONNECT, function (err, db){
+        if (err){
+          throw err;
+          return;
+        }
+
+        db.collection("accounts", function (err, collection){
+
+          if (err){
+            throw err;
+            return;
+          } 
+
+          collection.findOne({_id: obj_id}, function (err, doc) {
+            if (err){
+              throw err;
+              return;
+            } else if (doc){
+              response.send(doc.displayName);
+            } else {
+              response.send("");
+            }
+          });
+        });
+      });
+    });
+  },
+
+  get_pics(app){
+    app.post('/get_pics', function(request, response) {
       
       var MongoClient = require('mongodb').MongoClient;
 
@@ -27,7 +58,7 @@ module.exports = {
           return;
         }
 
-        db.collection("books", function (err, collection){
+        db.collection("photos", function (err, collection){
 
           if (err){
             throw err;
@@ -40,7 +71,8 @@ module.exports = {
               throw err;
               return;
             }
-            response.send({books: documents});
+
+            response.send(documents);
           });   
         });
       });
